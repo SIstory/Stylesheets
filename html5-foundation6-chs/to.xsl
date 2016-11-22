@@ -70,6 +70,9 @@
    <xsl:output method="xhtml" omit-xml-declaration="yes" indent="no" encoding="UTF-8"/>
    <xsl:param name="doctypeSystem"></xsl:param>
    
+   <!-- prevod: opombe, slike ipd. Pobere iz ../i18n.xml -->
+   <xsl:param name="documentationLanguage">en</xsl:param>
+   
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
    
@@ -82,9 +85,6 @@
    
    <xsl:template name="stdfooter"/>
    
-   <!-- prevod: opombe, slike ipd. Pobere iz ../i18n.xml -->
-   <xsl:param name="documentationLanguage">sl</xsl:param>
-   
    <xsl:param name="institution"></xsl:param>
    <xsl:param name="footnoteBackLink">true</xsl:param>
    <xsl:param name="generateParagraphIDs">true</xsl:param>
@@ -94,6 +94,32 @@
    <xsl:param name="numberHeadings">true</xsl:param>
    <xsl:param name="numberParagraphs">true</xsl:param>
    <xsl:param name="numberTables">true</xsl:param>
+   
+   <!-- pobrano iz Stylesheets-master/common/functions.xsl  -->
+   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+      <desc>[localisation] dummy template for overriding in a local system<param name="word">the word(s) to translate</param>
+      </desc>
+   </doc>
+   <xsl:variable name="myi18n" select="document('../myi18n.xml',document(''))"/>
+   <xsl:template name="myi18n">
+      <xsl:param name="word"/>
+      <xsl:variable name="Word">
+         <xsl:value-of select="normalize-space($word)"/>
+      </xsl:variable>
+      <xsl:for-each select="$myi18n">
+         <xsl:choose>
+            <xsl:when test="key('KEYS',$Word)/text[@xml:lang=$documentationLanguage]">
+               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang=$documentationLanguage]"/>
+            </xsl:when>
+            <xsl:when test="key('KEYS',$Word)/text[@lang3=$documentationLanguage]">
+               <xsl:value-of select="key('KEYS',$Word)/text[lang3=$documentationLanguage]"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang='sl']"/>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:for-each>
+   </xsl:template>
    
    <xsl:template name="headHook">
       <meta http-equiv="x-ua-compatible" content="ie=edge"/>

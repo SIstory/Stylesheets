@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Interface translations for TEI XSL stylesheets -->
+<i18n>
+  <codes>
+    <code xml:lang="sl" lang3="slv">
+      <desc>Slovenian</desc>
+      <name>Andrej Pančur</name>
+      <email>andrej.pancur@inz.si</email>
+    </code>
+  </codes>
+  <entry>
+    <key>Menu</key>
+    <text xml:lang="en" lang3="eng">Menu</text>
+    <text xml:lang="sl" lang3="slv">Meni</text>
+  </entry>
+  <entry>
+    <key>Search placeholder</key>
+    <text xml:lang="en" lang3="eng">Your search text</text>
+    <text xml:lang="sl" lang3="slv">Vaš iskalni niz</text>
+  </entry>
+  <entry>
+    <key>Nazaj</key>
+    <text xml:lang="en" lang3="eng">Back</text>
+    <text xml:lang="sl" lang3="slv">Nazaj</text>
+  </entry>
+  <entry>
+    <key>Naslovnica</key>
+    <text xml:lang="en" lang3="eng">Cover Page</text>
+    <text xml:lang="sl" lang3="slv">Naslovnica</text>
+  </entry>
+  <entry>
+    <key>Kazalo</key>
+    <text xml:lang="en" lang3="eng">TOC</text>
+    <text xml:lang="sl" lang3="slv">Kazalo</text>
+  </entry>
+  <entry>
+    <key>Kazali</key>
+    <text xml:lang="en" lang3="eng">TOCs</text>
+    <text xml:lang="sl" lang3="slv">Kazali</text>
+  </entry>
+  <entry>
+    <key>Kazala</key>
+    <text xml:lang="en" lang3="eng">TOCs</text>
+    <text xml:lang="sl" lang3="slv">Kazala</text>
+  </entry>
+  <entry>
+    <key>Indeks</key>
+    <text xml:lang="en" lang3="eng">List</text>
+    <text xml:lang="sl" lang3="slv">Indeks</text>
+  </entry>
+  <entry>
+    <key>Indeksa</key>
+    <text xml:lang="en" lang3="eng">Lists</text>
+    <text xml:lang="sl" lang3="slv">Indeksa</text>
+  </entry>
+  <entry>
+    <key>Indeksi</key>
+    <text xml:lang="en" lang3="eng">Lists</text>
+    <text xml:lang="sl" lang3="slv">Indeksi</text>
+  </entry>
+  <entry>
+    <key>Uvod</key>
+    <text xml:lang="en" lang3="eng">Front</text>
+    <text xml:lang="sl" lang3="slv">Uvod</text>
+  </entry>
+  <entry>
+    <key>Uvoda</key>
+    <text xml:lang="en" lang3="eng">Front</text>
+    <text xml:lang="sl" lang3="slv">Uvoda</text>
+  </entry>
+  <entry>
+    <key>Uvodi</key>
+    <text xml:lang="en" lang3="eng">Front</text>
+    <text xml:lang="sl" lang3="slv">Uvodi</text>
+  </entry>
+  <entry>
+    <key>Poglavje</key>
+    <text xml:lang="en" lang3="eng">Chapter</text>
+    <text xml:lang="sl" lang3="slv">Poglavje</text>
+  </entry>
+  <entry>
+    <key>Poglavji</key>
+    <text xml:lang="en" lang3="eng">Chapters</text>
+    <text xml:lang="sl" lang3="slv">Poglavji</text>
+  </entry>
+  <entry>
+    <key>Poglavja</key>
+    <text xml:lang="en" lang3="eng">Chapters</text>
+    <text xml:lang="sl" lang3="slv">Poglavja</text>
+  </entry>
+  <entry>
+    <key>Bibliografija</key>
+    <text xml:lang="en" lang3="eng">Bibliography</text>
+    <text xml:lang="sl" lang3="slv">Bibliografija</text>
+  </entry>
+  <entry>
+    <key>Priloga</key>
+    <text xml:lang="en" lang3="eng">Appendix</text>
+    <text xml:lang="sl" lang3="slv">Priloga</text>
+  </entry>
+  <entry>
+    <key>Prilogi</key>
+    <text xml:lang="en" lang3="eng">Appendices</text>
+    <text xml:lang="sl" lang3="slv">Prilogi</text>
+  </entry>
+  <entry>
+    <key>Priloge</key>
+    <text xml:lang="en" lang3="eng">Appendices</text>
+    <text xml:lang="sl" lang3="slv">Priloge</text>
+  </entry>
+  <entry>
+    <key>Povzetek</key>
+    <text xml:lang="en" lang3="eng">Summary</text>
+    <text xml:lang="sl" lang3="slv">Povzetek</text>
+  </entry>
+  <entry>
+    <key>Povzetka</key>
+    <text xml:lang="en" lang3="eng">Summaries</text>
+    <text xml:lang="sl" lang3="slv">Povzetka</text>
+  </entry>
+  <entry>
+    <key>Povzetki</key>
+    <text xml:lang="en" lang3="eng">Summaries</text>
+    <text xml:lang="sl" lang3="slv">Povzetki</text>
+  </entry>
+  
+</i18n>

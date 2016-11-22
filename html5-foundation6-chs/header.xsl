@@ -5,21 +5,11 @@
     exclude-result-prefixes="tei" 
     version="2.0">
     
-    <!-- Za statični naslov v header (samo naslovna stran index.html ima povsem svojega). -->
-    <xsl:param name="naslovHeader">
-        <!-- Vzamem samo prvi naslov: Ostali podnaslovi so tako in tako sebovani v kolofonu. -->
-        <h1 class="glavaNaslov">
-            <a href="index.html">
-                <xsl:value-of select="//tei:docTitle[1]/tei:titlePart[1]"/>
-            </a>
-        </h1>
-    </xsl:param>
-    
     <xsl:template name="attribute-href-to-sistory">
         <xsl:attribute name="href">
             <xsl:choose>
-                <xsl:when test="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref">
-                    <xsl:value-of select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref"/>
+                <xsl:when test="//tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref">
+                    <xsl:value-of select="//tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:text>http://www.sistory.si</xsl:text>
@@ -35,7 +25,9 @@
                 <div id="header-bar" data-sticky="" data-sticky-on="small" data-options="marginTop:0;" style="width:100%" data-top-anchor="1">
                     <div class="title-bar" data-responsive-toggle="publication-menu" data-hide-for="large">
                         <button class="menu-icon" type="button" data-toggle=""></button>
-                        <div class="title-bar-title">Menu</div>
+                        <div class="title-bar-title">
+                            <xsl:sequence select="tei:i18n('Menu')"/>
+                        </div>
                         <div class="title-bar-right">
                             <a class="title-bar-title">
                                 <xsl:call-template name="attribute-href-to-sistory"/>
@@ -43,7 +35,7 @@
                             </a>
                         </div>
                         <div id="publication-menu" class="hide-for-large">
-                            <ul class="vertical menu" data-drilldown="" data-options="backButton: &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a tabindex=&quot;0&quot;&gt;Nazaj&lt;/a&gt;&lt;/li&gt;;">
+                            <ul class="vertical menu" data-drilldown="" data-options="backButton: &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a tabindex=&quot;0&quot;&gt;{tei:i18n('Nazaj')}&lt;/a&gt;&lt;/li&gt;;">
                                 <xsl:call-template name="title-bar-list-of-contents">
                                     <xsl:with-param name="title-bar-type">vertical</xsl:with-param>
                                     <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
@@ -77,7 +69,7 @@
             <form action="search.html">
                 <div class="row collapse">
                     <div class="small-10 large-11 columns">
-                        <input type="text" name="q" class="tipue_search_input" placeholder="Vaš iskalni niz" />
+                        <input type="text" name="q" class="tipue_search_input" placeholder="{tei:i18n('Search placeholder')}" />
                     </div>
                     <div class="small-2 large-1 columns">
                         <input type="button" class="tipue_search_button" onclick="this.form.submit();"/>
@@ -96,7 +88,9 @@
             <xsl:if test="$thisChapter-id = 'index'">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:if>
-            <a href="index.html">Naslovnica</a>
+            <a href="index.html">
+                <xsl:sequence select="tei:i18n('Naslovnica')"/>
+            </a>
         </li>
         <!-- kolofon CIP -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']">
@@ -253,7 +247,9 @@
                     <xsl:attribute name="class">active</xsl:attribute>
                 </xsl:if>
                 <!-- povezava na prvi div z bibliogr -->
-                <a href="{concat(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id,'.html')}">Bibliografija</a>
+                <a href="{concat(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id,'.html')}">
+                    <xsl:sequence select="tei:i18n('Bibliografija')"/>
+                </a>
                 <xsl:if test="//tei:back/tei:div[@type='bibliogr'][2]">
                     <ul>
                         <xsl:call-template name="attribute-title-bar-type">
@@ -450,52 +446,87 @@
     <!-- izpis imena, glede na število kazal -->
     <xsl:template name="nav-toc-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:divGen[@type='toc']) = 1">Kazalo</xsl:when>
-            <xsl:when test="count(//tei:divGen[@type='toc']) = 2">Kazali</xsl:when>
-            <xsl:otherwise>Kazala</xsl:otherwise>
+            <xsl:when test="count(//tei:divGen[@type='toc']) = 1">
+                <xsl:sequence select="tei:i18n('Kazalo')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:divGen[@type='toc']) = 2">
+                <xsl:sequence select="tei:i18n('Kazali')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Kazala')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     <!-- izpis imena, glede na število indeksov (krajevnih, osebnih, organizacij) -->
     <xsl:template name="nav-index-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:divGen[@type='index']) = 1">Indeks</xsl:when>
-            <xsl:when test="count(//tei:divGen[@type='index']) = 2">Indeksa</xsl:when>
-            <xsl:otherwise>Indeksi</xsl:otherwise>
+            <xsl:when test="count(//tei:divGen[@type='index']) = 1">
+                <xsl:sequence select="tei:i18n('Indeks')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:divGen[@type='index']) = 2">
+                <xsl:sequence select="tei:i18n('Indeksa')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Indeksi')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     <!-- izpis imena, glede na število front/div -->
     <xsl:template name="nav-front-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:div[parent::tei:front]) = 1">Uvod</xsl:when>
-            <xsl:when test="count(//tei:div[parent::tei:front]) = 2">Uvoda</xsl:when>
-            <xsl:otherwise>Uvodi</xsl:otherwise>
+            <xsl:when test="count(//tei:div[parent::tei:front]) = 1">
+                <xsl:sequence select="tei:i18n('Uvod')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:div[parent::tei:front]) = 2">
+                <xsl:sequence select="tei:i18n('Uvoda')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Uvodi')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
     <!-- izpis imena, glede na število body/div -->
     <xsl:template name="nav-body-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:div[parent::tei:body]) = 1">Poglavje</xsl:when>
-            <xsl:when test="count(//tei:div[parent::tei:body]) = 2">Poglavji</xsl:when>
-            <xsl:otherwise>Poglavja</xsl:otherwise>
+            <xsl:when test="count(//tei:div[parent::tei:body]) = 1">
+                <xsl:sequence select="tei:i18n('Poglavje')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:div[parent::tei:body]) = 2">
+                <xsl:sequence select="tei:i18n('Poglavji')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Poglavja')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
     <!-- izpis imena, glede na število back/div -->
     <xsl:template name="nav-appendix-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:div[@type='appendix']) = 1">Priloga</xsl:when>
-            <xsl:when test="count(//tei:div[@type='appendix']) = 2">Prilogi</xsl:when>
-            <xsl:otherwise>Priloge</xsl:otherwise>
+            <xsl:when test="count(//tei:div[@type='appendix']) = 1">
+                <xsl:sequence select="tei:i18n('Priloga')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:div[@type='appendix']) = 2">
+                <xsl:sequence select="tei:i18n('Prilogi')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Priloge')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
     <!-- izpis imena, glede na število back/div -->
     <xsl:template name="nav-summary-head">
         <xsl:choose>
-            <xsl:when test="count(//tei:div[@type='summary']) = 1">Povzetek</xsl:when>
-            <xsl:when test="count(//tei:div[@type='summary']) = 2">Povzetka</xsl:when>
-            <xsl:otherwise>Povzetki</xsl:otherwise>
+            <xsl:when test="count(//tei:div[@type='summary']) = 1">
+                <xsl:sequence select="tei:i18n('Povzetek')"/>
+            </xsl:when>
+            <xsl:when test="count(//tei:div[@type='summary']) = 2">
+                <xsl:sequence select="tei:i18n('Povzetka')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Povzetki')"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
