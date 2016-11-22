@@ -5,22 +5,24 @@
     exclude-result-prefixes="tei"
     version="2.0">
     
-    <!-- dodatni parametri za sistory publikacije -->
     <!-- generična pot do css in js -->
-    <!--<xsl:param name="path-general">../../../</xsl:param>-->
-    <xsl:param name="path-general">http://www2.sistory.si/</xsl:param>
+    <xsl:param name="path-general">../../../</xsl:param>
+    <!--<xsl:param name="path-general">http://www2.sistory.si/</xsl:param>-->
+    
+    <!-- za divGen[@type='teiHeader']: če je $element-gloss-teiHeader true,
+        se izpišejo gloss imena za elemente, drugače je name() elementa -->
+    <xsl:param name="element-gloss-teiHeader">true</xsl:param>
+    <!-- za divGen[@type='teiHeader']: določi se jezik izpisa za gloss elementa, lahko samo za:
+         - sl
+         - en
+    -->
+    <xsl:param name="element-gloss-teiHeader-lang">sl</xsl:param>
     
     <!-- V html/head izpisani metapodatki -->
     <xsl:param name="description"></xsl:param>
     <xsl:param name="keywords">tekstilna industrija, postkomunizem, Slovenija, tekstilni delavci, družbeni položaj, družbene spremembe, antropologija, postsocializem, spomini</xsl:param>
     <xsl:param name="title">Labirinti postsocializma</xsl:param>
     
-    <!-- VPIŠI statični naslov za  naslovno stran index.html -->
-    <xsl:param name="naslovHeaderIndex">
-        <h1 class="glavaNaslov">Publikacija na portalu <a href="http://www.sistory.si">SIstory</a></h1>
-    </xsl:param>
-    
     <xsl:param name="HTML5_declaracion"><![CDATA[<!DOCTYPE html>]]></xsl:param>
-    
     
 </xsl:stylesheet>

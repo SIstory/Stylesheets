@@ -98,7 +98,18 @@
             </xsl:if>
             <a href="index.html">Naslovnica</a>
         </li>
-        <!-- kolofon -->
+        <!-- kolofon CIP -->
+        <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']">
+            <li>
+                <xsl:if test=".[@type='cip']">
+                    <xsl:attribute name="class">active</xsl:attribute>
+                </xsl:if>
+                <a href="{concat(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id,'.html')}">
+                    <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/tei:head[1]"/>
+                </a>
+            </li>
+        </xsl:if>
+        <!-- TEI kolofon -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']">
             <li>
                 <xsl:if test=".[@type='teiHeader']">

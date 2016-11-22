@@ -94,9 +94,13 @@
                             </xsl:if>
                             <xsl:call-template name="startHook"/>
                             <!-- VSTAVI VSEBINO divGen strani -->
-                            <!-- kolofon teiHeader -->
+                            <!-- kolofon CIP -->
+                            <xsl:if test="self::tei:divGen[@type='cip']">
+                                <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon"/>
+                            </xsl:if>
+                            <!-- TEI kolofon -->
                             <xsl:if test="self::tei:divGen[@type='teiHeader']">
-                                <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc"/>
+                                <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader"/>
                             </xsl:if>
                             <!-- kazalo vsebine toc -->
                             <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc']">
@@ -165,15 +169,15 @@
         </xsl:if>
     </xsl:template>
     
-    <!-- KOLOFON - teiHeader -->
+    <!-- KOLOFON - CIP -->
     
-    <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc">
-        <xsl:apply-templates select="tei:titleStmt"/>
-        <xsl:apply-templates select="tei:editionStmt"/>
-        <xsl:apply-templates select="tei:publicationStmt"/>
+    <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon">
+        <xsl:apply-templates select="tei:titleStmt" mode="kolofon"/>
+        <xsl:apply-templates select="tei:editionStmt" mode="kolofon"/>
+        <xsl:apply-templates select="tei:publicationStmt" mode="kolofon"/>
     </xsl:template>
     
-    <xsl:template match="tei:titleStmt">
+    <xsl:template match="tei:titleStmt" mode="kolofon">
         <!-- avtor -->
         <p>
             <xsl:for-each select="tei:author">
@@ -227,7 +231,7 @@
         <br/>
     </xsl:template>
     
-    <xsl:template match="tei:editionStmt">
+    <xsl:template match="tei:editionStmt" mode="kolofon">
         <p itemprop="bookEdition">
             <xsl:apply-templates select="tei:edition" mode="kolofon"/>
         </p>
@@ -236,7 +240,7 @@
         <xsl:apply-templates/>
     </xsl:template>
     
-    <xsl:template match="tei:publicationStmt">
+    <xsl:template match="tei:publicationStmt" mode="kolofon">
         <xsl:apply-templates select="tei:publisher" mode="kolofon"/>
         <xsl:apply-templates select="tei:date" mode="kolofon"/>
         <xsl:apply-templates select="tei:pubPlace" mode="kolofon"/>
@@ -378,6 +382,127 @@
     <xsl:template match="tei:p[@rend='cip']">
         <p><xsl:apply-templates/></p>
         <br/>
+    </xsl:template>
+    
+    <!-- TEI KOLOFON -->
+    <xsl:template match="tei:TEI/tei:teiHeader">
+        <dl>
+            <dt>
+                <xsl:choose>
+                    <xsl:when test="$element-gloss-teiHeader = 'true'">
+                        <xsl:call-template name="node-gloss"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="name()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="@*">
+                    <xsl:call-template name="teiHeader-dl-atributes"/>
+                </xsl:if>
+            </dt>
+            <dd>
+                <xsl:call-template name="teiHeader-dl"/>
+            </dd>
+        </dl>
+    </xsl:template>
+    
+    <xsl:template name="teiHeader-dl">
+        <dl>
+            <xsl:for-each select="*">
+                <dt>
+                    <xsl:choose>
+                        <xsl:when test="$element-gloss-teiHeader = 'true'">
+                            <xsl:call-template name="node-gloss"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="name()"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:if test="@*">
+                        <xsl:call-template name="teiHeader-dl-atributes"/>
+                    </xsl:if>
+                </dt>
+                <xsl:if test="text() and child::*">
+                    <dd>
+                        <xsl:value-of select="text()"/>
+                        <xsl:call-template name="teiHeader-dl"/>
+                    </dd>
+                </xsl:if>
+                <xsl:if test="not(text()) and child::*">
+                    <dd>
+                        <xsl:call-template name="teiHeader-dl"/>
+                    </dd>
+                </xsl:if>
+                <xsl:if test="text() and not(child::*)">
+                    <dd>
+                        <xsl:value-of select="text()"/>
+                    </dd>
+                </xsl:if>
+                <xsl:if test="not(text()) and not(child::*)">
+                    <dd></dd>
+                </xsl:if>
+            </xsl:for-each>
+        </dl>    
+    </xsl:template>
+    
+    <xsl:template name="teiHeader-dl-atributes">
+        <xsl:text> [</xsl:text>
+        <xsl:for-each select="@*">
+            <xsl:variable name="attribute-label">
+                <xsl:variable name="attribute-name" select="name()"/>
+                <xsl:variable name="attribute-gloss">
+                    <xsl:for-each select="document('../teiLocalise-sl.xml')/tei:TEI/tei:text/tei:body/tei:classSpec//tei:attDef[@ident = $attribute-name]">
+                        <xsl:choose>
+                            <xsl:when test="tei:gloss[@xml:lang = $element-gloss-teiHeader-lang]">
+                                <xsl:value-of select="tei:gloss[@xml:lang = $element-gloss-teiHeader-lang]"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$attribute-name"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>    
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="string-length($attribute-gloss) gt 0">
+                        <xsl:value-of select="$attribute-gloss"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$attribute-name"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:choose>
+                <xsl:when test="$element-gloss-teiHeader = 'true'">
+                    <xsl:value-of select="concat($attribute-label,' = ',.)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="concat(name(),' = ',.)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="position() != last()">
+                <xsl:text> | </xsl:text>
+            </xsl:if>
+        </xsl:for-each>
+        <xsl:text>]</xsl:text>
+    </xsl:template>
+    
+    <xsl:template name="node-gloss">
+        <xsl:variable name="node-ident" select="name()"/>
+        <xsl:variable name="node-names">
+            <xsl:for-each select="document('../teiLocalise-sl.xml')/tei:TEI/tei:text/tei:body/tei:elementSpec[@ident = $node-ident]">
+                <xsl:for-each select="tei:gloss">
+                    <xsl:copy-of select="."/>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$node-names/tei:gloss[@xml:lang = $element-gloss-teiHeader-lang]">
+                <xsl:value-of select="$node-names/tei:gloss[@xml:lang = $element-gloss-teiHeader-lang]"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$node-ident"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <!-- KAZALO SLIK -->
