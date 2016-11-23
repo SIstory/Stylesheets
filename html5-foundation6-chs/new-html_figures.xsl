@@ -20,6 +20,7 @@
                     <xsl:call-template name="makeRendition">
                         <xsl:with-param name="default">caption</xsl:with-param>
                     </xsl:call-template>
+                    <!-- na novo oblikovan izpis (bold in dvopičje) -->
                     <b><xsl:copy-of select="$captionlabel"/>
                         <xsl:if test="not($captionlabel = '')">
                             <xsl:text>: </xsl:text>
@@ -41,6 +42,34 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <xsl:template match="tei:graphic">
+        <xsl:choose>
+            <xsl:when test="parent::tei:figure[@type = 'chart']">
+                <xsl:choose>
+                    <xsl:when test=".[@mimeType = 'application/javascript']">
+                        <xsl:variable name="chart-file" select="parent::tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']]/tei:graphic[@mimeType = 'application/javascript']/@url"/>
+                        <xsl:variable name="chart-jsfile" select="document($chart-file)/html/body/script[last()]/@src"/>
+                        <script src="{$chart-jsfile}"></script>
+                        <xsl:for-each select="document($chart-file)/html/body/div">
+                            <xsl:copy-of select="."/>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <!-- Sedaj ostalih formatov pri tei:figure[@type = 'chart'] ne procesira: 
+                             če bo kdaj tako, da ne bo javascript grafikonov, temveč pri tei:figure[@type = 'chart']
+                             samo slike (npr. jpg, jpeg, png, svg), potem uredi nadaljno procesiranje.
+                        -->
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <!-- drugače je naprej procesiranje tako, kot je bilo v originalnem TEI Stylesheets -->
+            <xsl:otherwise>
+                <xsl:call-template name="showGraphic"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     
     <!-- pri tabeli ni štelo Tabela 1 itd., zato sem to dodal -->
     <!-- makeRendition po noven ne naredi pri table elementu, temveč pri parent div elementu (zaradi česar se lahko doda clas/rend table-scroll) -->

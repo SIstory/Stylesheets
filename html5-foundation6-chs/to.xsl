@@ -148,7 +148,14 @@
          <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/3.1/tipuesearch/tipuesearch_set.js')}"></script>
          <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch.js')}"></script>
       </xsl:if>
-      <!-- za back-to-top je drugače potrebno dati jquery, vendar sedaj ne rabim dodajati jquery kodo, ker je že vsebovana zgoraj -->
+      <!-- za highcharts -->
+      <xsl:if test="//tei:figure[@type = 'chart']/tei:graphic[@mimeType = 'application/javascript']">
+         <xsl:variable name="jsfile" select="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']][1]/tei:graphic[@mimeType = 'application/javascript']/@url"/>
+         <xsl:variable name="chart-jsfile" select="document($jsfile)/html/body/script[1]/@src"/>
+         <script src="{$chart-jsfile}"></script>
+      </xsl:if>
+      <!-- za back-to-top in highcharts je drugače potrebno dati jquery, vendar sedaj ne rabim dodajati jquery kodo,
+         ker je že vsebovana zgoraj -->
    </xsl:template>
    <xsl:template name="bodyEndHook">
       <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/what-input.js')}"></script>

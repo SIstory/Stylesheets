@@ -217,7 +217,7 @@
                                 <xsl:when test=".[$chapters-id eq $thisChapter-id]">
                                     <li class="active">
                                         <a href="{concat($thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
+                                            <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
                                         </a>
                                         <xsl:call-template name="title-bar-list-of-contents-subchapters">
                                             <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
@@ -227,7 +227,7 @@
                                 <xsl:otherwise>
                                     <li>
                                         <a href="{concat($chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
+                                            <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
                                         </a>
                                         <xsl:call-template name="title-bar-list-of-contents-subchapters">
                                             <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
@@ -412,6 +412,13 @@
         </xsl:if>
     </xsl:template>
     
+    <xsl:template match="tei:head" mode="chapters-head">
+        <xsl:apply-templates mode="chapters-head"/>
+    </xsl:template>
+    <xsl:template match="tei:note" mode="chapters-head">
+        <!-- ne procesimar -->
+    </xsl:template>
+    
     <xsl:template name="attribute-title-bar-type">
         <xsl:param name="title-bar-type"/>
         <xsl:attribute name="class">
@@ -435,7 +442,7 @@
                                 <xsl:variable name="this-subchapterID" select="@xml:id"/>
                                 <xsl:value-of select="concat(ancestor::tei:div[1]/@xml:id,'.html#',$this-subchapterID)"/>
                             </xsl:attribute>
-                            <xsl:value-of select="tei:head"/>
+                            <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
                         </a>
                     </li>
                 </xsl:for-each>
