@@ -118,6 +118,10 @@
                             <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables']">
                                 <xsl:call-template name="tables"/>
                             </xsl:if>
+                            <!-- kazalo vsebine toc, ki izpiše samo glavne naslove poglavij, skupaj z imeni avtorjev poglavij -->
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='title-author']">
+                                <xsl:call-template name="TOC-title-author"/>
+                            </xsl:if>
                             <!-- seznam (indeks) oseb -->
                             <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons']">
                                 <xsl:call-template name="persons"/>
@@ -941,6 +945,51 @@
             'descriptiveWords': 250});
             });
         </script>]]></xsl:text>
+    </xsl:template>
+    
+    <xsl:template name="TOC-title-author">
+        <xsl:if test="//tei:front">
+            <ul class="toc toc_front">
+                <xsl:for-each select="//tei:front/tei:div | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')]">
+                    <xsl:call-template name="TOC-title-author-li"/>
+                </xsl:for-each>
+            </ul>
+        </xsl:if>
+        <ul class="toc toc_body">
+            <xsl:for-each select="//tei:body/tei:div">
+                <xsl:call-template name="TOC-title-author-li"/>
+            </xsl:for-each>
+        </ul>
+        <xsl:if test="//tei:back">
+            <ul class="toc toc_back">
+                <xsl:for-each select="//tei:back/tei:div | //tei:back/tei:divGen">
+                    <xsl:call-template name="TOC-title-author-li"/>
+                </xsl:for-each>
+            </ul>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template name="TOC-title-author-li">
+        <li class="toc">
+            <a href="{concat(@xml:id,'.html')}">
+                <xsl:for-each select="tei:head">
+                    <xsl:apply-templates select="." mode="chapters-head"/>
+                    <xsl:if test="position() != last()">
+                        <xsl:text>: </xsl:text>
+                    </xsl:if>
+                </xsl:for-each>                    
+            </a>
+            <xsl:if test="tei:docAuthor">
+                <xsl:text> (</xsl:text>
+                <xsl:for-each select="tei:docAuthor">
+                    <xsl:value-of select="."/>
+                    <xsl:if test="position() != last()">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:text>)</xsl:text>
+            </xsl:if>
+        </li>
     </xsl:template>
     
     
