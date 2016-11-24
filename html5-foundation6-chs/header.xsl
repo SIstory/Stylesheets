@@ -21,8 +21,18 @@
     <xsl:template name="html-header">
         <xsl:param name="thisChapter-id"/>
         <header>
-            <div class="hide-for-large" data-sticky-container="">
-                <div id="header-bar" data-sticky="" data-sticky-on="small" data-options="marginTop:0;" style="width:100%" data-top-anchor="1">
+            <div class="hide-for-large">
+                <xsl:if test="$title-bar-sticky = 'true'">
+                    <xsl:attribute name="data-sticky-container"/>
+                </xsl:if>
+                <div id="header-bar">
+                    <xsl:if test="$title-bar-sticky = 'true'">
+                        <xsl:attribute name="data-sticky"/>
+                        <xsl:attribute name="data-sticky-on">small</xsl:attribute>
+                        <xsl:attribute name="data-options">marginTop:0;</xsl:attribute>
+                        <xsl:attribute name="style">width:100%</xsl:attribute>
+                        <xsl:attribute name="data-top-anchor">1</xsl:attribute>
+                    </xsl:if>
                     <div class="title-bar" data-responsive-toggle="publication-menu" data-hide-for="large">
                         <button class="menu-icon" type="button" data-toggle=""></button>
                         <div class="title-bar-title">
@@ -46,8 +56,17 @@
                 </div>
             </div>
             
-            <div class="show-for-large" data-sticky-container="">
-                <nav class="title-bar" data-sticky="" data-options="marginTop:0;" style="width:100%" data-top-anchor="1">
+            <div class="show-for-large">
+                <xsl:if test="$title-bar-sticky = 'true'">
+                    <xsl:attribute name="data-sticky-container"/>
+                </xsl:if>
+                <nav class="title-bar">
+                    <xsl:if test="$title-bar-sticky = 'true'">
+                        <xsl:attribute name="data-sticky"/>
+                        <xsl:attribute name="data-options">marginTop:0;</xsl:attribute>
+                        <xsl:attribute name="style">width:100%</xsl:attribute>
+                        <xsl:attribute name="data-top-anchor">1</xsl:attribute>
+                    </xsl:if>
                     <div class="title-bar-left">
                         <a class="title-bar-title">
                             <xsl:call-template name="attribute-href-to-sistory"/>

@@ -71,7 +71,7 @@
    <xsl:param name="doctypeSystem"></xsl:param>
    
    <!-- prevod: opombe, slike ipd. Pobere iz ../i18n.xml -->
-   <xsl:param name="documentationLanguage">en</xsl:param>
+   <xsl:param name="documentationLanguage">sl</xsl:param>
    
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
@@ -136,6 +136,9 @@
       <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory.css')"/>
    </xsl:param>
    <xsl:template name="cssHook">
+      <xsl:if test="$title-bar-sticky = 'true'">
+         <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory-sticky_title_bar.css')"/>
+      </xsl:if>
       <link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css" rel="stylesheet" type="text/css" />
       <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/3.1/moj_class_tipuesearch.css')}"  rel="stylesheet" type="text/css" />
    </xsl:template>
