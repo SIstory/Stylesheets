@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:teidocx="http://www.tei-c.org/ns/teidocx/1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    exclude-result-prefixes="tei html teidocx"
+<xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:teidocx="http://www.tei-c.org/ns/teidocx/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="tei html teidocx"
     version="2.0">
-    
+
     <xsl:template name="makeaNote">
         <xsl:variable name="identifier">
             <xsl:call-template name="noteID"/>
@@ -22,7 +18,8 @@
             <p>
                 <xsl:choose>
                     <xsl:when test="$footnoteBackLink = 'true'">
-                        <a class="link_return" title="Pojdi nazaj k besedilu" href="#{concat($identifier,'_return')}">
+                        <a class="link_return" title="Pojdi nazaj k besedilu"
+                            href="#{concat($identifier,'_return')}">
                             <sup>
                                 <xsl:call-template name="noteN"/>
                                 <xsl:if test="matches(@n, '[0-9]')">
@@ -52,8 +49,126 @@
             </p>
         </div>
     </xsl:template>
-    
-    
-    
-    
+
+    <xsl:template match="tei:list">
+        <xsl:if test="tei:head">
+            <xsl:element name="{if (tei:isInline(.)) then 'span' else 'div' }">
+                <xsl:attribute name="class">listhead</xsl:attribute>
+                <xsl:apply-templates select="tei:head"/>
+            </xsl:element>
+        </xsl:if>
+        <xsl:variable name="listcontents">
+            <xsl:choose>
+                <xsl:when test="@type = 'catalogue'">
+                    <p>
+                        <dl>
+                            <xsl:call-template name="makeRendition">
+                                <xsl:with-param name="default">false</xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:for-each select="*[not(self::tei:head)]">
+                                <p/>
+                                <xsl:apply-templates mode="gloss" select="."/>
+                            </xsl:for-each>
+                        </dl>
+                    </p>
+                </xsl:when>
+                <xsl:when test="@type = 'gloss' and tei:match(@rend, 'multicol')">
+                    <xsl:variable name="nitems">
+                        <xsl:value-of select="count(tei:item) div 2"/>
+                    </xsl:variable>
+                    <p>
+                        <table>
+                            <xsl:call-template name="makeRendition">
+                                <xsl:with-param name="default">false</xsl:with-param>
+                            </xsl:call-template>
+                            <tr>
+                                <td style="vertical-align:top;">
+                                    <dl>
+                                        <xsl:apply-templates mode="gloss"
+                                            select="tei:item[position() &lt;= $nitems]"/>
+                                    </dl>
+                                </td>
+                                <td style="vertical-align:top;">
+                                    <dl>
+                                        <xsl:apply-templates mode="gloss"
+                                            select="tei:item[position() > $nitems]"/>
+                                    </dl>
+                                </td>
+                            </tr>
+                        </table>
+                    </p>
+                </xsl:when>
+                <xsl:when test="tei:isGlossList(.)">
+                    <dl>
+                        <!-- se doda potencialni xml:id (nujno zaradi tipue search) -->
+                        <xsl:if test="@xml:id">
+                            <xsl:attribute name="id">
+                                <xsl:value-of select="@xml:id"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                        <xsl:call-template name="makeRendition">
+                            <xsl:with-param name="default">false</xsl:with-param>
+                        </xsl:call-template>
+                        <xsl:apply-templates mode="gloss"
+                            select="*[not(self::tei:head or self::tei:trailer)]"/>
+                    </dl>
+                </xsl:when>
+                <xsl:when test="tei:isGlossTable(.)">
+                    <table>
+                        <xsl:call-template name="makeRendition">
+                            <xsl:with-param name="default">false</xsl:with-param>
+                        </xsl:call-template>
+                        <xsl:apply-templates mode="glosstable"
+                            select="*[not(self::tei:head or self::tei:trailer)]"/>
+                    </table>
+                </xsl:when>
+                <xsl:when test="tei:isInlineList(.)">
+                    <xsl:apply-templates select="*[not(self::tei:head or self::tei:trailer)]"
+                        mode="inline"/>
+                </xsl:when>
+                <xsl:when test="@type = 'inline' or @type = 'runin'">
+                    <p>
+                        <xsl:apply-templates select="*[not(self::tei:head or self::tei:trailer)]"
+                            mode="inline"/>
+                    </p>
+                </xsl:when>
+                <xsl:when test="@type = 'bibl'">
+                    <xsl:apply-templates select="*[not(self::tei:head or self::tei:trailer)]"
+                        mode="bibl"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:element name="{if (tei:isOrderedList(.)) then 'ol' else 'ul'}">
+                        <xsl:call-template name="makeRendition">
+                            <xsl:with-param name="default">false</xsl:with-param>
+                        </xsl:call-template>
+                        <xsl:if test="starts-with(@type, 'ordered:')">
+                            <xsl:attribute name="start">
+                                <xsl:value-of select="substring-after(@type, ':')"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                        <!-- se doda potencialni xml:id (nujno zaradi tipue search) -->
+                        <xsl:if test="@xml:id">
+                            <xsl:attribute name="id">
+                                <xsl:value-of select="@xml:id"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                        <xsl:apply-templates select="*[not(self::tei:head or self::tei:trailer)]"/>
+                    </xsl:element>
+                    <xsl:apply-templates select="tei:trailer"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!--
+	<xsl:variable name="n">
+      <xsl:number level="any"/>
+    </xsl:variable>
+    <xsl:result-document href="/tmp/list{$n}.xml">
+      <xsl:copy-of select="$listcontents"/>
+      </xsl:result-document>
+      -->
+        <xsl:apply-templates mode="inlist" select="$listcontents"/>
+    </xsl:template>
+
+
+
 </xsl:stylesheet>
