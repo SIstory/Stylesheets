@@ -31,7 +31,7 @@
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="."/>
+                        <xsl:apply-templates/>
                     </xsl:otherwise>
                 </xsl:choose>
                 <xsl:if test="position() ne last()">
@@ -143,7 +143,7 @@
             <xsl:number value="$numLevel"/>
         </xsl:variable>
         <!-- anchor osebe -->
-        <a id="{concat('oseba-',$numPerson)}"></a>
+        <a id="{concat('person-',$numPerson)}"></a>
         <xsl:choose>
             <xsl:when test="tei:forename or tei:surname">
                 <xsl:apply-templates/>
@@ -162,12 +162,15 @@
                                 <xsl:attribute name="href">
                                     <!-- imensko kazalo je vedno spravljeno v datoteki persons.html
                                     (generira iz tei:divGen[@type='persons'] -->
-                                    <xsl:value-of select="concat('persons.html',./@ref)"/>
+                                    <xsl:value-of select="concat('persons.html',@ref)"/>
                                 </xsl:attribute>
                                 <xsl:attribute name="title">
-                                    <xsl:value-of select="concat('Imensko kazalo: oseba št. ',$numPerson)"/>
+                                    <xsl:variable name="persName-text1">
+                                        <xsl:sequence select="tei:i18n('persName-text1')"/>
+                                    </xsl:variable>
+                                    <xsl:value-of select="concat($persName-text1,$numPerson)"/>
                                 </xsl:attribute>
-                                <xsl:text>[os.]</xsl:text>
+                                <xsl:sequence select="tei:i18n('persName-text2')"/>
                             </a>
                         </sup>
                     </xsl:when>

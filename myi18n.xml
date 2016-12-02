@@ -8,6 +8,7 @@
       <email>andrej.pancur@inz.si</email>
     </code>
   </codes>
+  
   <entry>
     <key>Menu</key>
     <text xml:lang="en" lang3="eng">Menu</text>
@@ -123,5 +124,39 @@
     <text xml:lang="en" lang3="eng">Summaries</text>
     <text xml:lang="sl" lang3="slv">Povzetki</text>
   </entry>
-  
+  <entry>
+    <key>by-nc-nd/4.0 text 1</key>
+    <text xml:lang="en" lang3="eng">This</text>
+    <text xml:lang="sl" lang3="slv">To</text>
+  </entry>
+  <entry>
+    <key>by-nc-nd/4.0 text 2</key>
+    <text xml:lang="en" lang3="eng">work</text>
+    <text xml:lang="sl" lang3="slv">delo</text>
+  </entry>
+  <entry>
+    <key>by-nc-nd/4.0 text 3</key>
+    <text xml:lang="en" lang3="eng">by</text>
+    <text xml:lang="sl" lang3="slv">avtorja</text>
+  </entry>
+  <entry>
+    <key>by-nc-nd/4.0 text 4</key>
+    <text xml:lang="en" lang3="eng">is licensed under a</text>
+    <text xml:lang="sl" lang3="slv">je ponujeno pod</text>
+  </entry>
+  <entry>
+    <key>by-nc-nd/4.0 text 5</key>
+    <text xml:lang="en" lang3="eng">Creative Commons Attribution Non-commercial Non-derivative 4.0 International license</text>
+    <text xml:lang="sl" lang3="slv">Creative Commons Priznanje avtorstva-Nekomercialno-Brez predelav 4.0 Mednarodna licenco</text>
+  </entry>
+  <entry>
+    <key>persName-text1</key>
+    <text xml:lang="en" lang3="eng">List of persons: No. </text>
+    <text xml:lang="sl" lang3="slv">Imensko kazalo: št. </text>
+  </entry>
+  <entry>
+    <key>persName-text2</key>
+    <text xml:lang="en" lang3="eng">[pers.]</text>
+    <text xml:lang="sl" lang3="slv">[os.]</text>
+  </entry>
 </i18n>

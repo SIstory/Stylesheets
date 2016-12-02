@@ -177,6 +177,7 @@
     
     <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon">
         <xsl:apply-templates select="tei:titleStmt" mode="kolofon"/>
+        <xsl:apply-templates select="tei:seriesStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:editionStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:publicationStmt" mode="kolofon"/>
     </xsl:template>
@@ -233,6 +234,21 @@
         <br/>
         <xsl:apply-templates select="tei:respStmt" mode="kolofon"/>
         <br/>
+        <xsl:if test="tei:funder">
+            <p itemprop="funder">
+                <xsl:value-of select="tei:funder"/>
+            </p>
+        </xsl:if>
+        <br/>
+    </xsl:template>
+    
+    <xsl:template match="tei:seriesStmt" mode="kolofon">
+        <p itemprop="isPartOf">
+            <xsl:value-of select="tei:title"/>
+            <xsl:if test="tei:biblScope[@unit='volume']">
+                <xsl:value-of select="concat('; ',tei:biblScope)"/>
+            </xsl:if>
+        </p>
     </xsl:template>
     
     <xsl:template match="tei:editionStmt" mode="kolofon">
@@ -335,6 +351,7 @@
                         </xsl:for-each>
                     </p>
                 </xsl:for-each>
+                <xsl:apply-templates select="tei:p[@rend='cip-editor']"/>
                 <xsl:for-each select="ancestor::tei:publicationStmt/tei:idno[@type='cobiss']">
                     <p>
                         <xsl:value-of select="."/>
@@ -352,29 +369,39 @@
                     <img alt="Creative Commons licenca" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" />
                 </a>
                 <br />
-                <xsl:text>To </xsl:text>
-                <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">delo</span>
-                <xsl:text> avtorja </xsl:text>
-                <a xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName" rel="cc:attributionURL" href="{ancestor::tei:publicationStmt/tei:pubPlace/tei:ref}">
-                    <!-- Poiščem avtorje.
+                <xsl:sequence select="tei:i18n('by-nc-nd/4.0 text 1')"/><xsl:text> </xsl:text>
+                <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">
+                    <xsl:sequence select="tei:i18n('by-nc-nd/4.0 text 2')"/>
+                </span>
+                <xsl:if test="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author">
+                    <xsl:text> </xsl:text>
+                    <xsl:sequence select="tei:i18n('by-nc-nd/4.0 text 3')"/>
+                    <xsl:text> </xsl:text>
+                    <a xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName" rel="cc:attributionURL" href="{ancestor::tei:publicationStmt/tei:pubPlace/tei:ref}">
+                        <!-- Poiščem avtorje.
                          Imena in priimki ločeni s presledkom, avtorji z vejico -->
-                    <xsl:for-each select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author">
-                        <xsl:for-each select="tei:forename">
-                            <xsl:value-of select="concat(.,' ')"/>
-                        </xsl:for-each>
-                        <xsl:for-each select="tei:surname">
-                            <xsl:value-of select="."/>
+                        <xsl:for-each select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author">
+                            <xsl:for-each select="tei:forename">
+                                <xsl:value-of select="concat(.,' ')"/>
+                            </xsl:for-each>
+                            <xsl:for-each select="tei:surname">
+                                <xsl:value-of select="."/>
+                                <xsl:if test="position() != last()">
+                                    <xsl:text> </xsl:text>
+                                </xsl:if>
+                            </xsl:for-each>
                             <xsl:if test="position() != last()">
                                 <xsl:text> </xsl:text>
                             </xsl:if>
                         </xsl:for-each>
-                        <xsl:if test="position() != last()">
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                    </xsl:for-each>
+                    </a>
+                </xsl:if>
+                <xsl:text> </xsl:text>
+                <xsl:sequence select="tei:i18n('by-nc-nd/4.0 text 4')"/>
+                <xsl:text> </xsl:text>
+                <a rel="license" href="{.}">
+                    <xsl:sequence select="tei:i18n('by-nc-nd/4.0 text 5')"/>
                 </a>
-                <xsl:text> je ponujeno pod </xsl:text>
-                <a rel="license" href="{.}">Creative Commons Priznanje avtorstva-Nekomercialno-Brez predelav 4.0 Mednarodna licenco</a>
             </p>
         </xsl:if>
     </xsl:template>
@@ -386,6 +413,9 @@
     <xsl:template match="tei:p[@rend='cip']">
         <p><xsl:apply-templates/></p>
         <br/>
+    </xsl:template>
+    <xsl:template match="tei:p[@rend='cip-editor']">
+        <p><xsl:apply-templates/></p>
     </xsl:template>
     
     <!-- TEI KOLOFON -->
@@ -543,9 +573,9 @@
     
     <!-- KAZALO TABEL -->
     <xsl:template name="tables">
-        <!-- izpiše vse slike -->
+        <!-- izpiše vse tabele, ki imajo naslov (s tem filtriramo tiste tabele, ki so v okviru grafikonov) -->
         <ul class="circel">
-            <xsl:for-each select="//tei:table">
+            <xsl:for-each select="//tei:table[tei:head]">
                 <xsl:variable name="table-id" select="@xml:id"/>
                 <xsl:variable name="table-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
                 <li>
@@ -667,10 +697,10 @@
                                 <xsl:number value="$numLevel"/>
                             </xsl:variable>
                             <xsl:variable name="persNameID">
-                                <xsl:value-of select="concat('oseba-',$numPerson)"/>
+                                <xsl:value-of select="concat('person-',$numPerson)"/>
                             </xsl:variable>
                             <a href="{concat($ancestorChapter-id,'.html#',$persNameID)}">
-                                <xsl:value-of select="substring-after($persNameID,'oseba-')"/>
+                                <xsl:value-of select="substring-after($persNameID,'person-')"/>
                             </a>
                             <xsl:if test="position() != last()">
                                 <xsl:text>, </xsl:text>
@@ -915,10 +945,13 @@
                 
                 <xsl:for-each select="//node()[@xml:id][ancestor::tei:text][parent::tei:div][not(self::tei:div)]">
                     <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                    <xsl:variable name="besedilo">
+                        <xsl:apply-templates mode="besedilo"/>
+                    </xsl:variable>
                     <xsl:text>{ "title": "</xsl:text>
                     <xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
                     <xsl:text>", "text": "</xsl:text>
-                    <xsl:value-of select="normalize-space(translate(.,'&#xA;&quot;','&#x20;'))"/>
+                    <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;','&#x20;'))"/>
                     <xsl:text>", "tags": "</xsl:text>
                     <xsl:text>", "loc": "</xsl:text>
                     <xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>
@@ -945,6 +978,12 @@
             'descriptiveWords': 250});
             });
         </script>]]></xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="node()" mode="besedilo" xml:space="preserve">
+        <xsl:copy>
+            <xsl:apply-templates select="node()" mode="besedilo"/>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template name="TOC-title-author">

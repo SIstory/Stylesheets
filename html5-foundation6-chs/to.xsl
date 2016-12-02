@@ -71,12 +71,12 @@
    <xsl:param name="doctypeSystem"></xsl:param>
    
    <!-- prevod: opombe, slike ipd. Pobere iz ../i18n.xml -->
-   <xsl:param name="documentationLanguage">sl</xsl:param>
+   <xsl:param name="documentationLanguage">en</xsl:param>
    
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
    
-   <xsl:param name="outputDir">rezultat</xsl:param>
+   <xsl:param name="outputDir">HTML</xsl:param>
    <xsl:param name="splitLevel">0</xsl:param>
    <xsl:param name="STDOUT">false</xsl:param>
    
@@ -149,13 +149,20 @@
          <!-- v spodnjem js je shranjena vsebina za iskanje -->
          <script src="tipuesearch_content.js"></script>
          <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/3.1/tipuesearch/tipuesearch_set.js')}"></script>
-         <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch.js')}"></script>
+         <xsl:choose>
+            <xsl:when test="$documentationLanguage = 'en'">
+               <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch-en.js')}"></script>
+            </xsl:when>
+            <xsl:otherwise>
+               <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch.js')}"></script>
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:if>
       <!-- za highcharts -->
-      <xsl:if test="//tei:figure[@type = 'chart']/tei:graphic[@mimeType = 'application/javascript']">
+      <xsl:if test="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']]">
          <xsl:variable name="jsfile" select="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']][1]/tei:graphic[@mimeType = 'application/javascript']/@url"/>
          <xsl:variable name="chart-jsfile" select="document($jsfile)/html/body/script[1]/@src"/>
-         <script src="{$chart-jsfile}"></script>
+         <script src="{$chart-jsfile[1]}"></script>
       </xsl:if>
       <!-- za back-to-top in highcharts je drugače potrebno dati jquery, vendar sedaj ne rabim dodajati jquery kodo,
          ker je že vsebovana zgoraj -->
@@ -484,7 +491,7 @@
                   </xsl:for-each>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="."/>
+                  <xsl:apply-templates/>
                </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="position() ne last()">
