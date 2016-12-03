@@ -76,7 +76,7 @@
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
    
-   <xsl:param name="outputDir">HTML</xsl:param>
+   <xsl:param name="outputDir">/Users/administrator/Documents/moje/publikacije/PNZ-2015-3/</xsl:param>
    <xsl:param name="splitLevel">0</xsl:param>
    <xsl:param name="STDOUT">false</xsl:param>
    
@@ -120,6 +120,27 @@
          </xsl:choose>
       </xsl:for-each>
    </xsl:template>
+   
+   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+      <desc>[html] Generate name for a chunk of output<param name="ident">ident</param>
+      </desc>
+   </doc>
+   <xsl:template name="outputChunkName">
+      <xsl:param name="ident"/>
+      <xsl:if test="not($outputDir ='')">
+         <xsl:value-of select="if (matches($outputDir,'^[A-Za-z]:')) then concat('file:///',$outputDir) else $outputDir"/>
+         <xsl:if test="not(substring($outputDir,string-length($outputDir),string-length($outputDir))='/')">
+            <xsl:text>/</xsl:text>
+         </xsl:if>
+         <!-- dodam dodatno ime za mapo iz xml:id -->
+         <xsl:if test="ancestor-or-self::tei:TEI/@xml:id">
+            <xsl:value-of select="concat(ancestor-or-self::tei:TEI/@xml:id,'/')"/>
+         </xsl:if>
+      </xsl:if>
+      <xsl:value-of select="if (matches($ident,'^[A-Za-z]:')) then concat('file:///',$ident) else $ident"/>
+      <xsl:value-of select="$outputSuffix"/>
+   </xsl:template>
+   
    
    <xsl:template name="headHook">
       <meta http-equiv="x-ua-compatible" content="ie=edge"/>

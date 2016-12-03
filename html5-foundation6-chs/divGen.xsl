@@ -6,7 +6,7 @@
     version="2.0">
     
     <xsl:template match="tei:divGen">
-        <xsl:variable name="datoteka" select="concat($outputDir,'/',@xml:id,'.html')"/>
+        <xsl:variable name="datoteka" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/',@xml:id,'.html')"/>
         <xsl:result-document href="{$datoteka}" doctype-system="" omit-xml-declaration="yes">
             <!-- vključimo HTML5 deklaracijo, skupaj z kodo za delovanje starejših verzij Internet Explorerja -->
             <xsl:value-of select="$HTML5_declaracion" disable-output-escaping="yes"/>
@@ -937,7 +937,7 @@
     <xsl:template name="search">
         <div class="tipue_search_content">
             <xsl:text> </xsl:text>
-            <xsl:variable name="datoteka-js" select="concat($outputDir,'/','tipuesearch_content.js')"/>
+            <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
             <xsl:result-document href="{$datoteka-js}" method="text" encoding="UTF-8">
                 <!-- ZAČETEK JavaScript dokumenta -->
                 <xsl:text>var tipuesearch = {"pages": [
