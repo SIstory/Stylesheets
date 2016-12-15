@@ -6,11 +6,11 @@
     version="2.0">
     
     <!-- generična pot do css in js -->
-    <!--<xsl:param name="path-general">../../../</xsl:param>-->
-    <xsl:param name="path-general">http://www2.sistory.si/</xsl:param>
+    <xsl:param name="path-general">../../../</xsl:param>
+    <!--<xsl:param name="path-general">http://www2.sistory.si/</xsl:param>-->
     
     <!-- If you want to have sticky title nav bar: true  -->
-    <xsl:param name="title-bar-sticky"></xsl:param>
+    <xsl:param name="title-bar-sticky">false</xsl:param>
     
     <!-- za divGen[@type='teiHeader']: če je $element-gloss-teiHeader true,
         se izpišejo gloss imena za elemente, drugače je name() elementa -->
@@ -19,13 +19,27 @@
          - sl
          - en
     -->
-    <xsl:param name="element-gloss-teiHeader-lang">sl</xsl:param>
+    <xsl:param name="element-gloss-teiHeader-lang">en</xsl:param>
     
     <!-- V html/head izpisani metapodatki -->
-    <xsl:param name="description">Between the House of Habsburg and Tito: A Look at the Slovenian Past 1861–1980</xsl:param>
-    <xsl:param name="keywords">history, Slovenia</xsl:param>
-    <xsl:param name="title">Between the House of Habsburg and Tito</xsl:param>
+    <xsl:param name="description"></xsl:param>
+    <xsl:param name="keywords"></xsl:param>
+    <xsl:param name="title"></xsl:param>
     
     <xsl:param name="HTML5_declaracion"><![CDATA[<!DOCTYPE html>]]></xsl:param>
+    
+    <!-- če procesiramo teiCorpus: možnost, da odstranimo nadaljno procesiranje tei:TEI,
+         saj se lahko pojavijo problemi (različne sezname (npr. slik, tabel ipd.) dela v celotnem korpusu in ne samo znotraj enega tei:TEI).
+         V tem primeru posamezne tei:TEI procesiramo ločeno.
+         Vrednost true, če želimo procesirati.
+    -->
+    <xsl:param name="processing-TEI-from-teiCorpus"></xsl:param>
+    <!-- naslednji parametri imajo isto pri teiCorpus funkcijo kot divGen pri TEI -->
+    <!-- če hočemo, da procesira teiHeader od teiCorpusa (podobno kot divGen[@type='teiHeader']) -->
+    <xsl:param name="write-teiCorpus-teiHeader">true</xsl:param>
+    <!-- če hočemo procesirati kolofon in cip pri teiCorpus (podobno kot divGen[@type='cip']) -->
+    <xsl:param name="write-teiCorpus-cip">true</xsl:param>
+    <!-- če hočemo procesirati kazalo vsebine tei:TEI vključenih v teiCorpus (podobno kot divGen[@type='toc'][@xml:id='titleAuthor')  -->
+    <xsl:param name="write-teiCorpus-toc_titleAuthor">true</xsl:param>
     
 </xsl:stylesheet>

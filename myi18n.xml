@@ -30,6 +30,11 @@
     <text xml:lang="sl" lang3="slv">Naslovnica</text>
   </entry>
   <entry>
+    <key>Naslov</key>
+    <text xml:lang="en" lang3="eng">Title</text>
+    <text xml:lang="sl" lang3="slv">Naslov</text>
+  </entry>
+  <entry>
     <key>Kazalo</key>
     <text xml:lang="en" lang3="eng">TOC</text>
     <text xml:lang="sl" lang3="slv">Kazalo</text>
@@ -60,6 +65,21 @@
     <text xml:lang="sl" lang3="slv">Indeksi</text>
   </entry>
   <entry>
+    <key>Izvleček</key>
+    <text xml:lang="en" lang3="eng">Abstract</text>
+    <text xml:lang="sl" lang3="slv">Izvleček</text>
+  </entry>
+  <entry>
+    <key>Izvlečka</key>
+    <text xml:lang="en" lang3="eng">Abstracts</text>
+    <text xml:lang="sl" lang3="slv">Izvlečka</text>
+  </entry>
+  <entry>
+    <key>Izvlečki</key>
+    <text xml:lang="en" lang3="eng">Abstracts</text>
+    <text xml:lang="sl" lang3="slv">Izvlečki</text>
+  </entry>
+  <entry>
     <key>Uvod</key>
     <text xml:lang="en" lang3="eng">Front</text>
     <text xml:lang="sl" lang3="slv">Uvod</text>
@@ -73,6 +93,16 @@
     <key>Uvodi</key>
     <text xml:lang="en" lang3="eng">Front</text>
     <text xml:lang="sl" lang3="slv">Uvodi</text>
+  </entry>
+  <entry>
+    <key>Besedilo članka</key>
+    <text xml:lang="en" lang3="eng">Full text</text>
+    <text xml:lang="sl" lang3="slv">Besedilo članka</text>
+  </entry>
+  <entry>
+    <key>Besedilo</key>
+    <text xml:lang="en" lang3="eng">Full text</text>
+    <text xml:lang="sl" lang3="slv">Besedilo</text>
   </entry>
   <entry>
     <key>Poglavje</key>
@@ -158,5 +188,35 @@
     <key>persName-text2</key>
     <text xml:lang="en" lang3="eng">[pers.]</text>
     <text xml:lang="sl" lang3="slv">[os.]</text>
+  </entry>
+  <entry>
+    <key>volume</key>
+    <text xml:lang="en" lang3="eng">Volume</text>
+    <text xml:lang="sl" lang3="slv">Letnik</text>
+  </entry>
+  <entry>
+    <key>issue</key>
+    <text xml:lang="en" lang3="eng">Issue</text>
+    <text xml:lang="sl" lang3="slv">Številka</text>
+  </entry>
+  <entry>
+    <key>teiHeader</key>
+    <text xml:lang="en" lang3="eng">TEI header</text>
+    <text xml:lang="sl" lang3="slv">Kolofon TEI</text>
+  </entry>
+  <entry>
+    <key>impressum</key>
+    <text xml:lang="en" lang3="eng">Impressum</text>
+    <text xml:lang="sl" lang3="slv">Kolofon</text>
+  </entry>
+  <entry>
+    <key>tocJournal</key>
+    <text xml:lang="en" lang3="eng">TOC</text>
+    <text xml:lang="sl" lang3="slv">Kazalo</text>
+  </entry>
+  <entry>
+    <key>tocJournal-title</key>
+    <text xml:lang="en" lang3="eng">Table of Contents</text>
+    <text xml:lang="sl" lang3="slv">Kazalo vsebine</text>
   </entry>
 </i18n>

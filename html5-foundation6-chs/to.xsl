@@ -5,7 +5,8 @@
    xmlns:tei="http://www.tei-c.org/ns/1.0"
    xmlns:teidocx="http://www.tei-c.org/ns/teidocx/1.0"
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-   exclude-result-prefixes="tei html teidocx"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   exclude-result-prefixes="tei html teidocx xs"
    version="2.0">
 
    <!-- import base conversion style -->
@@ -16,14 +17,15 @@
    <xsl:import href="../../Stylesheets-master/html5/html5.xsl"/>
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/microdata.xsl -->
    <xsl:import href="../../Stylesheets-master/html5/microdata.xsl"/>
+   <xsl:import href="my-html_param.xsl"/>
    
    <xsl:import href="new-html_figures.xsl"/>
    <xsl:import href="new-html_core.xsl"/>
+   <xsl:import href="new-html_corpus.xsl"/>
    
    <xsl:import href="header.xsl"/>
    <xsl:import href="divGen.xsl"/>
    
-   <xsl:import href="my-html_param.xsl"/>
    <xsl:import href="my-html_core.xsl"/>
    <xsl:import href="bibliography.xsl"/>
    
@@ -71,13 +73,14 @@
    <xsl:param name="doctypeSystem"></xsl:param>
    
    <!-- prevod: opombe, slike ipd. Pobere iz ../i18n.xml -->
-   <xsl:param name="documentationLanguage">en</xsl:param>
+   <xsl:param name="documentationLanguage">sl</xsl:param>
    
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
    
-   <xsl:param name="outputDir">/Users/administrator/Documents/moje/publikacije/PNZ-2015-3/</xsl:param>
-   <xsl:param name="splitLevel">0</xsl:param>
+   <xsl:param name="outputDir">/Users/administrator/Documents/moje/publikacije/PPP/</xsl:param>
+   <!--<xsl:param name="splitLevel">0</xsl:param>-->
+   <xsl:param name="splitLevel">2</xsl:param>
    <xsl:param name="STDOUT">false</xsl:param>
    
    <!-- head v drugem div je h3 itn. Glej še spodaj template stdheader -->
@@ -88,12 +91,18 @@
    <xsl:param name="institution"></xsl:param>
    <xsl:param name="footnoteBackLink">true</xsl:param>
    <xsl:param name="generateParagraphIDs">true</xsl:param>
-   <xsl:param name="numberBackHeadings"></xsl:param>
+   <!--<xsl:param name="numberBackHeadings"></xsl:param>
    <xsl:param name="numberFigures">true</xsl:param>
    <xsl:param name="numberFrontTables">true</xsl:param>
    <xsl:param name="numberHeadings">true</xsl:param>
    <xsl:param name="numberParagraphs">true</xsl:param>
-   <xsl:param name="numberTables">true</xsl:param>
+   <xsl:param name="numberTables">true</xsl:param>-->
+   <xsl:param name="numberBackHeadings"></xsl:param>
+   <xsl:param name="numberFigures"></xsl:param>
+   <xsl:param name="numberFrontTables"></xsl:param>
+   <xsl:param name="numberHeadings"></xsl:param>
+   <xsl:param name="numberParagraphs"></xsl:param>
+   <xsl:param name="numberTables"></xsl:param>
    
    <!-- pobrano iz Stylesheets-master/common/functions.xsl  -->
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
@@ -140,6 +149,36 @@
       <xsl:value-of select="if (matches($ident,'^[A-Za-z]:')) then concat('file:///',$ident) else $ident"/>
       <xsl:value-of select="$outputSuffix"/>
    </xsl:template>
+   
+   <!-- vzeto iz html.xsl -->
+   <!-- Vsak body mora nujno imeti div in tudi, če ima samo enega, naredi na podlagi njegovega xml:id nov html dokument -->
+   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+      <desc>whether a div starts a new page</desc>
+   </doc>
+   <xsl:function name="tei:keepDivOnPage" as="xs:boolean">
+      <xsl:param name="context"/>
+      <xsl:for-each select="$context">
+         <xsl:choose>
+            <!-- 4. we are part of an inner text -->
+            <xsl:when test="ancestor::tei:floatingText">true</xsl:when>
+            <!-- 3. we have special rendering on the document -->
+            <xsl:when test="ancestor::tei:TEI/tei:match(@rend,'all') 
+               or ancestor::tei:TEI/tei:match(@rend,'frontpage') 
+               or ancestor::tei:TEI/tei:match(@rend,'nosplit')">true</xsl:when>
+            <!-- zato tega odstranim -->
+            <!-- 2. we are a singleton -->
+            <!--<xsl:when test="parent::tei:body[count(*)=1] and not(tei:div or
+               tei:div2)">true</xsl:when>-->
+            <!-- 1. we have no proceding sections at top level -->
+            <xsl:when test="not(ancestor::tei:group) and parent::tei:body and
+               not(parent::tei:body/preceding-sibling::tei:front)
+               and not	(preceding-sibling::*)">true</xsl:when>
+            <!-- 0. we are down the hierarchy -->
+            <xsl:when test="tei:match(@rend,'nosplit')">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </xsl:for-each>
+   </xsl:function>
    
    
    <xsl:template name="headHook">
@@ -229,13 +268,14 @@
                </xsl:if>
                <xsl:comment>TEI  front matter </xsl:comment>
                <xsl:apply-templates select="tei:text/tei:front"/>
-               <xsl:if
+               <!-- odstranim možnost izdelave kazala na takoj prvi strani -->
+               <!--<xsl:if
                   test="$autoToc = 'true' and (descendant::tei:div or descendant::tei:div1) and not(descendant::tei:divGen[@type = 'toc'])">
                   <h2>
                      <xsl:sequence select="tei:i18n('tocWords')"/>
                   </h2>
                   <xsl:call-template name="mainTOC"/>
-               </xsl:if>
+               </xsl:if>-->
                <xsl:choose>
                   <xsl:when test="tei:text/tei:group">
                      <xsl:apply-templates select="tei:text/tei:group"/>
@@ -309,7 +349,9 @@
                <section>
                   <div class="row">
                      <div class="medium-2 columns show-for-medium">
-                        <xsl:call-template name="previousLink"/>
+                        <p>
+                           <xsl:call-template name="previousLink"/>
+                        </p>
                      </div>
                      <div class="medium-8 small-12 columns">
                         <xsl:call-template name="stdheader">
@@ -319,15 +361,27 @@
                         </xsl:call-template>
                      </div>
                      <div class="medium-2 columns show-for-medium text-right">
-                        <xsl:call-template name="nextLink"/>
+                        <p>
+                           <xsl:if test="parent::tei:div">
+                              <xsl:call-template name="parentChapter"/>
+                           </xsl:if>
+                           <xsl:call-template name="nextLink"/>
+                        </p>
                      </div>
                   </div>
                   <div class="row hide-for-medium">
                      <div class="small-6 columns text-center">
-                        <xsl:call-template name="previousLink"/>
+                        <p>
+                           <xsl:call-template name="previousLink"/>
+                        </p>
                      </div>
                      <div class="small-6 columns text-center">
-                        <xsl:call-template name="nextLink"/>
+                        <p>
+                           <xsl:if test="parent::tei:div">
+                              <xsl:call-template name="parentChapter"/>
+                           </xsl:if>
+                           <xsl:call-template name="nextLink"/>
+                        </p>
                      </div>
                   </div>
                   <!--<xsl:if test="$topNavigationPanel = 'true'">
@@ -345,23 +399,42 @@
                   <xsl:call-template name="makeDivBody">
                      <xsl:with-param name="depth" select="count(ancestor::tei:div) + 1"/>
                   </xsl:call-template>
-                  <xsl:if test=".//tei:note">
+                  <!-- če je part (in ima zato samo naslov), se doda kazalo vsebine -->
+                  <xsl:if test="$autoToc = 'true' and self::tei:div[@type='part']">
+                     <!-- kličem template partTOC, katerega prisilim, da gre samo eno stopnjo v globino -->
+                     <xsl:call-template name="partTOC">
+                        <xsl:with-param name="force">1</xsl:with-param>
+                     </xsl:call-template>
+               </xsl:if>
+                  <xsl:variable name="exist-note">
+                     <xsl:call-template name="printNotes"/>
+                  </xsl:variable>
+                  <!-- .//tei:note -->
+                  <xsl:if test="string-length($exist-note) gt 0">
                      <div class="row">
                         <div class="small-6 columns text-center">
-                           <xsl:call-template name="previousLink"/>
+                           <p>
+                              <xsl:call-template name="previousLink"/>
+                           </p>
                         </div>
                         <div class="small-6 columns text-center">
-                           <xsl:call-template name="nextLink"/>
+                           <p>
+                              <xsl:call-template name="nextLink"/>
+                           </p>
                         </div>
                      </div>
                   </xsl:if>
                   <xsl:call-template name="printNotes"/>
                   <div class="row">
                      <div class="small-6 columns text-center">
-                        <xsl:call-template name="previousLink"/>
+                        <p>
+                           <xsl:call-template name="previousLink"/>
+                        </p>
                      </div>
                      <div class="small-6 columns text-center">
-                        <xsl:call-template name="nextLink"/>
+                        <p>
+                           <xsl:call-template name="nextLink"/>
+                        </p>
                      </div>
                   </div>
                   <!--<xsl:if test="$bottomNavigationPanel = 'true'">
@@ -486,6 +559,131 @@
          </xsl:attribute>
          <xsl:text>&lt;&lt;</xsl:text>    
       </a>
+   </xsl:template>
+   
+   <xsl:template name="parentChapter">
+      <a class="button">
+         <xsl:attribute name="href">
+            <xsl:apply-templates mode="generateLink" select="parent::tei:div"/>
+         </xsl:attribute>
+         <xsl:attribute name="title">
+            <xsl:sequence select="tei:i18n('upWord')"/>
+            <xsl:text>: </xsl:text>
+            <xsl:variable name="chaptersHead">
+               <xsl:apply-templates select="parent::tei:div/tei:head" mode="chapters-head"/>
+            </xsl:variable>
+            <xsl:value-of select="normalize-space($chaptersHead)"/>
+         </xsl:attribute>
+         <xsl:text>^</xsl:text>    
+      </a>
+   </xsl:template>
+   
+   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+      <desc>
+         <p>[html] </p>
+         <p xmlns="http://www.w3.org/1999/xhtml"> xref to previous and last sections </p>
+      </desc>
+   </doc>
+   <xsl:template name="nextLink">
+      <xsl:variable name="myName">
+         <xsl:value-of select="local-name(.)"/>
+      </xsl:variable>
+      <xsl:choose>
+         <xsl:when test="following-sibling::tei:TEI">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:TEI[1]"/>
+         </xsl:when>
+         <xsl:when test="following-sibling::tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div[1]"/>
+         </xsl:when>
+         <!-- dodam spodnja when, da omogočim povezave med poglavji tudi takrat, kadar so globje kot 
+            npr. tei:body/tei:div (urejeno do splitLevel 2) -->
+         <xsl:when test="not(following-sibling::tei:div[tei:head or $autoHead='true']) and parent::tei:div/following-sibling::tei:div/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="parent::tei:div/following-sibling::tei:div[1]/tei:div[1]"/>
+         </xsl:when>
+         <xsl:when test="not(following-sibling::tei:div[tei:head or $autoHead='true']) 
+            and not(parent::tei:div/following-sibling::tei:div/tei:div[tei:head or $autoHead='true'])
+            and parent::tei:div/parent::tei:div/following-sibling::tei:div/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="parent::tei:div/parent::tei:div/following-sibling::tei:div[1]/tei:div[1]/tei:div[1]"/>
+         </xsl:when>
+         
+         <xsl:when test="parent::tei:body/following-sibling::tei:back/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink"
+               select="parent::tei:body/following-sibling::tei:back/tei:div[1]"/>
+         </xsl:when>
+         <xsl:when test="parent::tei:front/following-sibling::tei:body/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink"
+               select="parent::tei:front/following-sibling::tei:body/tei:div[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div1' and following-sibling::tei:div1[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div1[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div2' and following-sibling::tei:div2[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div2[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div3' and following-sibling::tei:div3[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div3[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div4' and following-sibling::tei:div4[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div4[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div5' and following-sibling::tei:div5[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div5[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div6' and following-sibling::tei:div6[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generateNextLink" select="following-sibling::tei:div6[1]"/>
+         </xsl:when>
+      </xsl:choose>
+   </xsl:template>
+   
+   <xsl:template name="previousLink">
+      <xsl:variable name="myName">
+         <xsl:value-of select="local-name(.)"/>
+      </xsl:variable>
+      <xsl:choose>
+         <xsl:when test="preceding-sibling::tei:TEI">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:TEI[1]"/>
+         </xsl:when>
+         <xsl:when test="preceding-sibling::tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div[1]"/>
+         </xsl:when>
+         <!-- dodam spodnja when, da omogočim povezave med poglavji tudi takrat, kadar so globje kot 
+            npr. tei:body/tei:div (urejeno do splitLevel 2) -->
+         <xsl:when test="not(preceding-sibling::tei:div[tei:head or $autoHead='true']) and parent::tei:div/preceding-sibling::tei:div/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="parent::tei:div/preceding-sibling::tei:div[1]/tei:div[last()]"/>
+         </xsl:when>
+         <xsl:when test="not(preceding-sibling::tei:div[tei:head or $autoHead='true']) 
+            and not(parent::tei:div/preceding-sibling::tei:div/tei:div[tei:head or $autoHead='true'])
+            and parent::tei:div/parent::tei:div/preceding-sibling::tei:div/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="parent::tei:div/parent::tei:div/preceding-sibling::tei:div[1]/tei:div[last()]/tei:div[last()]"/>
+         </xsl:when>
+         
+         <xsl:when test="parent::tei:body/preceding-sibling::tei:front/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink"
+               select="parent::tei:body/preceding-sibling::tei:front/tei:div[last()]"/>
+         </xsl:when>
+         <xsl:when test="parent::tei:back/preceding-sibling::tei:body/tei:div[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink"
+               select="parent::tei:body/preceding-sibling::tei:body/tei:div[last()]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div1' and preceding-sibling::tei:div1[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div1[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div2' and preceding-sibling::tei:div2[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div2[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div3' and preceding-sibling::tei:div3[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div3[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div4' and preceding-sibling::tei:div4[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div4[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div5' and preceding-sibling::tei:div5[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div5[1]"/>
+         </xsl:when>
+         <xsl:when test="$myName='div6' and preceding-sibling::tei:div6[tei:head or $autoHead='true']">
+            <xsl:apply-templates mode="generatePreviousLink" select="preceding-sibling::tei:div6[1]"/>
+         </xsl:when>
+      </xsl:choose>
    </xsl:template>
    
    <!-- NASLOVNA STRAN -->

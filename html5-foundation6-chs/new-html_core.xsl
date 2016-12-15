@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:teidocx="http://www.tei-c.org/ns/teidocx/1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="tei html teidocx"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    exclude-result-prefixes="#all"
     version="2.0">
 
     <xsl:template name="makeaNote">
@@ -33,7 +35,7 @@
                         <sup>
                             <xsl:call-template name="noteN"/>
                             <xsl:if test="matches(@n, '[0-9]')">
-                                <xsl:text>.</xsl:text>
+                                <!--<xsl:text>.</xsl:text>-->
                             </xsl:if>
                             <xsl:text> </xsl:text>
                         </sup>
@@ -146,6 +148,23 @@
                                 <xsl:value-of select="substring-after(@type, ':')"/>
                             </xsl:attribute>
                         </xsl:if>
+                        <!-- Na podalgi zgornjega zgleda sem uredil tako, da bom oblikovanje seznamov
+                            uredil s pomočjo html atributov start in type. Zaradi te ureditve,
+                            sem moral tudi dopolniti tei funkcijo isOrderedList -->
+                        <xsl:if test="starts-with(@rend, 'ordered:')">
+                            <xsl:choose>
+                                <xsl:when test="number(substring-after(@rend, ':'))">
+                                    <xsl:attribute name="start">
+                                        <xsl:value-of select="substring-after(@rend, ':')"/>
+                                    </xsl:attribute>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="type">
+                                        <xsl:value-of select="substring-after(@rend, ':')"/>
+                                    </xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
                         <!-- se doda potencialni xml:id (nujno zaradi tipue search) -->
                         <xsl:if test="@xml:id">
                             <xsl:attribute name="id">
@@ -168,7 +187,23 @@
       -->
         <xsl:apply-templates mode="inlist" select="$listcontents"/>
     </xsl:template>
-
-
+    
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>whether a list is to be rendered as ordered</desc>
+    </doc>
+    <xsl:function name="tei:isOrderedList" as="xs:boolean">
+        <xsl:param name="context"/>
+        <xsl:for-each select="$context">
+            <xsl:choose>
+                <xsl:when test="tei:match(@rend,'numbered')">true</xsl:when>
+                <xsl:when test="tei:match(@rend,'ordered')">true</xsl:when>
+                <!-- dopolnil s spodnjim when -->
+                <xsl:when test="starts-with(@rend, 'ordered:')">true</xsl:when>
+                <xsl:when test="@type='ordered'">true</xsl:when>
+                <xsl:otherwise>false</xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+    </xsl:function>
+    
 
 </xsl:stylesheet>

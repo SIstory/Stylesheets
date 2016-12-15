@@ -36,7 +36,7 @@
                     <xsl:call-template name="bodyHook"/>
                     <!-- začetek vsebine -->
                     <div class="column row">
-                        <xsl:if test="self::tei:divGen[@type='teiHeader']">
+                        <xsl:if test="self::tei:divGen[@type='cip']">
                             <!-- Microdata - schema.org - dodam itemscope -->
                             <xsl:attribute name="itemscope"/>
                             <!-- in itemtype za knjige -->
@@ -103,35 +103,39 @@
                                 <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader"/>
                             </xsl:if>
                             <!-- kazalo vsebine toc -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc']">
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='toc']">
                                 <xsl:call-template name="mainTOC"/>
                             </xsl:if>
                             <!-- kazalo slik -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='images']">
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='images'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='images']">
                                 <xsl:call-template name="images"/>
                             </xsl:if>
                             <!-- kazalo grafikonov -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='charts']">
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='charts'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='charts']">
                                 <xsl:call-template name="charts"/>
                             </xsl:if>
                             <!-- kazalo tabel -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables']">
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='tables']">
                                 <xsl:call-template name="tables"/>
                             </xsl:if>
                             <!-- kazalo vsebine toc, ki izpiše samo glavne naslove poglavij, skupaj z imeni avtorjev poglavij -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='title-author']">
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleAuthor'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleAuthor']">
                                 <xsl:call-template name="TOC-title-author"/>
                             </xsl:if>
+                            <!-- kazalo vsebine toc, ki izpiše samo naslove poglavij, kjer ima div atributa type in xml:id -->
+                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleType'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleType']">
+                                <xsl:call-template name="TOC-title-type"/>
+                            </xsl:if>
                             <!-- seznam (indeks) oseb -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons']">
+                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='persons']">
                                 <xsl:call-template name="persons"/>
                             </xsl:if>
                             <!-- seznam (indeks) krajev -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='places']">
+                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='places'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='places']">
                                 <xsl:call-template name="places"/>
                             </xsl:if>
                             <!-- seznam (indeks) organizacij -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='organizations']">
+                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='organizations'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='organizations']">
                                 <xsl:call-template name="organizations"/>
                             </xsl:if>
                             <!-- iskalnik -->
@@ -175,7 +179,7 @@
     
     <!-- KOLOFON - CIP -->
     
-    <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon">
+    <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc | tei:teiCorpus/tei:teiHeader/tei:fileDesc" mode="kolofon">
         <xsl:apply-templates select="tei:titleStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:seriesStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:editionStmt" mode="kolofon"/>
@@ -419,7 +423,7 @@
     </xsl:template>
     
     <!-- TEI KOLOFON -->
-    <xsl:template match="tei:TEI/tei:teiHeader">
+    <xsl:template match="tei:TEI/tei:teiHeader | tei:teiCorpus/tei:teiHeader">
         <dl>
             <dt>
                 <xsl:choose>
@@ -935,6 +939,7 @@
     </xsl:template>
     
     <xsl:template name="search">
+        <xsl:variable name="tei-id" select="ancestor::tei:TEI/@xml:id"/>
         <div class="tipue_search_content">
             <xsl:text> </xsl:text>
             <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
@@ -943,18 +948,23 @@
                 <xsl:text>var tipuesearch = {"pages": [
                                     </xsl:text>
                 
-                <xsl:for-each select="//node()[@xml:id][ancestor::tei:text][parent::tei:div][not(self::tei:div)]">
-                    <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                <xsl:for-each select="//node()[ancestor::tei:TEI/@xml:id = $tei-id][@xml:id][ancestor::tei:text][parent::tei:div][not(self::tei:div)]">
+                    <!--<xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>-->
+                    <xsl:variable name="generatedLink">
+                        <xsl:apply-templates mode="generateLink" select="."/>
+                    </xsl:variable>
                     <xsl:variable name="besedilo">
                         <xsl:apply-templates mode="besedilo"/>
                     </xsl:variable>
                     <xsl:text>{ "title": "</xsl:text>
-                    <xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
+                    <xsl:value-of select="normalize-space(translate(translate(parent::tei:div/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
+                    <!--<xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>-->
                     <xsl:text>", "text": "</xsl:text>
                     <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;','&#x20;'))"/>
                     <xsl:text>", "tags": "</xsl:text>
                     <xsl:text>", "loc": "</xsl:text>
-                    <xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>
+                    <xsl:value-of select="$generatedLink"/>
+                    <!--<xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>-->
                     <xsl:text>" }</xsl:text>
                     <xsl:if test="position() != last()">
                         <xsl:text>,</xsl:text>
@@ -1010,7 +1020,10 @@
     
     <xsl:template name="TOC-title-author-li">
         <li class="toc">
-            <a href="{concat(@xml:id,'.html')}">
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:apply-templates mode="generateLink" select="."/>
+                </xsl:attribute>
                 <xsl:for-each select="tei:head">
                     <xsl:apply-templates select="." mode="chapters-head"/>
                     <xsl:if test="position() != last()">
@@ -1031,5 +1044,49 @@
         </li>
     </xsl:template>
     
+    <xsl:template name="TOC-title-type">
+        <xsl:if test="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen">
+            <ul class="toc toc_front">
+                <xsl:for-each select="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')]">
+                    <xsl:call-template name="TOC-title-type-li"/>
+                </xsl:for-each>
+            </ul>
+        </xsl:if>
+        <ul class="toc toc_body">
+            <xsl:for-each select="//tei:body/tei:div[@type][@xml:id]">
+                <xsl:call-template name="TOC-title-type-li"/>
+            </xsl:for-each>
+        </ul>
+        <xsl:if test="//tei:back/tei:div[@type][@xml:id] | //tei:back/tei:divGen">
+            <ul class="toc toc_back">
+                <xsl:for-each select="//tei:back/tei:div[@type][@xml:id] | //tei:back/tei:divGen">
+                    <xsl:call-template name="TOC-title-type-li"/>
+                </xsl:for-each>
+            </ul>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template name="TOC-title-type-li">
+        <li class="toc">
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:apply-templates mode="generateLink" select="."/>
+                </xsl:attribute>
+                <xsl:for-each select="tei:head">
+                    <xsl:apply-templates select="." mode="chapters-head"/>
+                    <xsl:if test="position() != last()">
+                        <xsl:text>: </xsl:text>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:if test="tei:div[@type][@xml:id]">
+                    <ul>
+                        <xsl:for-each select="tei:div[@type][@xml:id]">
+                            <xsl:call-template name="TOC-title-type-li"/>
+                        </xsl:for-each>
+                    </ul>
+                </xsl:if>
+            </a>
+        </li>
+    </xsl:template>
     
 </xsl:stylesheet>
