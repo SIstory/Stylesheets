@@ -6,11 +6,11 @@
     version="2.0">
     
     <!-- generična pot do css in js -->
-    <xsl:param name="path-general">../../../</xsl:param>
-    <!--<xsl:param name="path-general">http://www2.sistory.si/</xsl:param>-->
+    <!--<xsl:param name="path-general">../../../</xsl:param>-->
+    <xsl:param name="path-general">http://www2.sistory.si/</xsl:param>
     
     <!-- If you want to have sticky title nav bar: true  -->
-    <xsl:param name="title-bar-sticky">false</xsl:param>
+    <xsl:param name="title-bar-sticky">true</xsl:param>
     
     <!-- za divGen[@type='teiHeader']: če je $element-gloss-teiHeader true,
         se izpišejo gloss imena za elemente, drugače je name() elementa -->
@@ -19,7 +19,7 @@
          - sl
          - en
     -->
-    <xsl:param name="element-gloss-teiHeader-lang">en</xsl:param>
+    <xsl:param name="element-gloss-teiHeader-lang">sl</xsl:param>
     
     <!-- V html/head izpisani metapodatki -->
     <xsl:param name="description"></xsl:param>

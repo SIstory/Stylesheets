@@ -78,9 +78,8 @@
    <!-- verbose - izpišejo se pojansila; koristno v času kodiranja (true), drugače odstrani oz. false -->
    <xsl:param name="verbose">false</xsl:param>
    
-   <xsl:param name="outputDir">/Users/administrator/Documents/moje/publikacije/PPP/</xsl:param>
-   <!--<xsl:param name="splitLevel">0</xsl:param>-->
-   <xsl:param name="splitLevel">2</xsl:param>
+   <xsl:param name="outputDir">HTML</xsl:param>
+   <xsl:param name="splitLevel">0</xsl:param>
    <xsl:param name="STDOUT">false</xsl:param>
    
    <!-- head v drugem div je h3 itn. Glej še spodaj template stdheader -->
@@ -91,18 +90,12 @@
    <xsl:param name="institution"></xsl:param>
    <xsl:param name="footnoteBackLink">true</xsl:param>
    <xsl:param name="generateParagraphIDs">true</xsl:param>
-   <!--<xsl:param name="numberBackHeadings"></xsl:param>
+   <xsl:param name="numberBackHeadings"></xsl:param>
    <xsl:param name="numberFigures">true</xsl:param>
    <xsl:param name="numberFrontTables">true</xsl:param>
    <xsl:param name="numberHeadings">true</xsl:param>
    <xsl:param name="numberParagraphs">true</xsl:param>
-   <xsl:param name="numberTables">true</xsl:param>-->
-   <xsl:param name="numberBackHeadings"></xsl:param>
-   <xsl:param name="numberFigures"></xsl:param>
-   <xsl:param name="numberFrontTables"></xsl:param>
-   <xsl:param name="numberHeadings"></xsl:param>
-   <xsl:param name="numberParagraphs"></xsl:param>
-   <xsl:param name="numberTables"></xsl:param>
+   <xsl:param name="numberTables">true</xsl:param>
    
    <!-- pobrano iz Stylesheets-master/common/functions.xsl  -->
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">

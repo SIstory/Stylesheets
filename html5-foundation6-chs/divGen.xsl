@@ -183,6 +183,7 @@
         <xsl:apply-templates select="tei:titleStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:seriesStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:editionStmt" mode="kolofon"/>
+        <xsl:call-template name="countWords"/>
         <xsl:apply-templates select="tei:publicationStmt" mode="kolofon"/>
     </xsl:template>
     
@@ -361,6 +362,14 @@
                         <xsl:value-of select="."/>
                     </p>
                 </xsl:for-each>
+            </div>
+        </xsl:if>
+        <!-- vstavljena HTML koda za CIP -->
+        <xsl:if test="tei:p[@rend='CIP']">
+            <div class="CIP-obroba">
+                <p>
+                    <xsl:value-of select="tei:p[@rend='CIP']" disable-output-escaping="yes"/>
+                </p>
             </div>
         </xsl:if>
     </xsl:template>
@@ -1047,7 +1056,7 @@
     <xsl:template name="TOC-title-type">
         <xsl:if test="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen">
             <ul class="toc toc_front">
-                <xsl:for-each select="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')]">
+                <xsl:for-each select="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')][not(@type = 'toc')]">
                     <xsl:call-template name="TOC-title-type-li"/>
                 </xsl:for-each>
             </ul>
@@ -1073,7 +1082,17 @@
                     <xsl:apply-templates mode="generateLink" select="."/>
                 </xsl:attribute>
                 <xsl:for-each select="tei:head">
-                    <xsl:apply-templates select="." mode="chapters-head"/>
+                    <xsl:variable name="chaptersHead">
+                        <xsl:apply-templates select="." mode="chapters-head"/>
+                    </xsl:variable>
+                    <xsl:choose>
+                        <xsl:when test="parent::tei:div[@type='part']">
+                            <xsl:value-of select="upper-case($chaptersHead)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$chaptersHead"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <xsl:if test="position() != last()">
                         <xsl:text>: </xsl:text>
                     </xsl:if>
@@ -1087,6 +1106,19 @@
                 </xsl:if>
             </a>
         </li>
+    </xsl:template>
+    
+    <xsl:template name="countWords">
+        <xsl:variable name="string" select="normalize-space(//tei:text)"/> 
+        <p>
+            <xsl:value-of select="concat(tei:i18n('WordCount'),': ')"/>
+            <xsl:value-of select="concat(tei:i18n('Words'),' ')"/>
+            <xsl:value-of select="count(tokenize(normalize-space($string),'\W+')[. != ''])"/>
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="concat(tei:i18n('Characters (with spaces)'),' ')"/>
+            <xsl:value-of select="string-length(normalize-space($string))"/>
+            <xsl:text>.</xsl:text>
+        </p>
     </xsl:template>
     
 </xsl:stylesheet>

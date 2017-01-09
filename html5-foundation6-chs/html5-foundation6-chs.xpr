@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="17.0">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options>
+            <serialized version="17.0" xml:space="preserve">
+                <map>
+                    <entry>
+                        <String>enable.project.master.files.support</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                </map>
+            </serialized>
+        </options>
+    </meta>
+    <projectTree name="html5-foundation6-chs.xpr">
+        <folder masterFiles="true" name="Master Files">
+            <file name="to.xsl"/>
+        </folder>
+        <file name="bibliography.xsl"/>
+        <file name="divGen.xsl"/>
+        <file name="header.xsl"/>
+        <file name="my-html_core.xsl"/>
+        <file name="my-html_param.xsl"/>
+        <file name="new-html_core.xsl"/>
+        <file name="new-html_corpus.xsl"/>
+        <file name="new-html_figures.xsl"/>
+        <file name="to.xsl"/>
+    </projectTree>
+</project>
