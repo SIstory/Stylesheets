@@ -219,4 +219,19 @@
     <text xml:lang="en" lang3="eng">Table of Contents</text>
     <text xml:lang="sl" lang3="slv">Kazalo vsebine</text>
   </entry>
+  <entry>
+    <key>WordCount</key>
+    <text xml:lang="en" lang3="eng">Word count</text>
+    <text xml:lang="sl" lang3="slv">Štetje besed</text>
+  </entry>
+  <entry>
+    <key>Words</key>
+    <text xml:lang="en" lang3="eng">words</text>
+    <text xml:lang="sl" lang3="slv">besede</text>
+  </entry>
+  <entry>
+    <key>Characters (with spaces)</key>
+    <text xml:lang="en" lang3="eng">characters (with spaces)</text>
+    <text xml:lang="sl" lang3="slv">znaki (s presledki)</text>
+  </entry>
 </i18n>
