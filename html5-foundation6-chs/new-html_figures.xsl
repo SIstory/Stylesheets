@@ -50,7 +50,7 @@
                     <xsl:when test=".[@mimeType = 'application/javascript']">
                         <xsl:variable name="chart-file" select="parent::tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']]/tei:graphic[@mimeType = 'application/javascript']/@url"/>
                         <xsl:variable name="chart-jsfile" select="document($chart-file)/html/body/script[last()]/@src"/>
-                        <script src="{$chart-jsfile}"></script>
+                        <script src="{concat($graphicsPrefix,$chart-jsfile)}"></script>
                         <xsl:for-each select="document($chart-file)/html/body/div">
                             <xsl:copy-of select="."/>
                         </xsl:for-each>

@@ -158,11 +158,18 @@
                             </span>
                         </span>
                         <sup>
+                            <xsl:variable name="sistoryPath">
+                                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                    <xsl:call-template name="sistoryPath">
+                                        <xsl:with-param name="chapterID">persons</xsl:with-param>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
                             <a class="person">
                                 <xsl:attribute name="href">
                                     <!-- imensko kazalo je vedno spravljeno v datoteki persons.html
                                     (generira iz tei:divGen[@type='persons'] -->
-                                    <xsl:value-of select="concat('persons.html',@ref)"/>
+                                    <xsl:value-of select="concat($sistoryPath,'persons.html',@ref)"/>
                                 </xsl:attribute>
                                 <xsl:attribute name="title">
                                     <xsl:variable name="persName-text1">

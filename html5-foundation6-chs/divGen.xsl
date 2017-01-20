@@ -166,14 +166,28 @@
     
     <xsl:template name="previous-divGen-Link">
         <xsl:param name="thisDivGenType"/>
+        <xsl:variable name="sistoryPath">
+            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                <xsl:call-template name="sistoryPath">
+                    <xsl:with-param name="chapterID" select="preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id"/>
+                </xsl:call-template>
+            </xsl:if>
+        </xsl:variable>
         <xsl:if test="preceding-sibling::tei:divGen[@type = $thisDivGenType]">
-            <a class="button" href="{concat(preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&lt;&lt;</a>
+            <a class="button" href="{concat($sistoryPath,preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&lt;&lt;</a>
         </xsl:if>
     </xsl:template>
     <xsl:template name="next-divGen-Link">
         <xsl:param name="thisDivGenType"/>
+        <xsl:variable name="sistoryPath">
+            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                <xsl:call-template name="sistoryPath">
+                    <xsl:with-param name="chapterID" select="following-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id"/>
+                </xsl:call-template>
+            </xsl:if>
+        </xsl:variable>
         <xsl:if test="following-sibling::tei:divGen[@type = $thisDivGenType]">
-            <a class="button" href="{concat(following-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{following-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&gt;&gt;</a>
+            <a class="button" href="{concat($sistoryPath,following-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{following-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&gt;&gt;</a>
         </xsl:if>
     </xsl:template>
     
@@ -559,8 +573,15 @@
             <xsl:for-each select="//tei:figure[not(@type='chart')]">
                 <xsl:variable name="figure-id" select="@xml:id"/>
                 <xsl:variable name="image-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="$image-chapter-id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
                 <li>
-                    <a href="{concat($image-chapter-id,'.html#',$figure-id)}">
+                    <a href="{concat($sistoryPath,$image-chapter-id,'.html#',$figure-id)}">
                         <xsl:value-of select="tei:head"/>
                     </a>
                 </li>
@@ -575,8 +596,15 @@
             <xsl:for-each select="//tei:figure[@type='chart']">
                 <xsl:variable name="figure-id" select="@xml:id"/>
                 <xsl:variable name="image-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="$image-chapter-id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
                 <li>
-                    <a href="{concat($image-chapter-id,'.html#',$figure-id)}">
+                    <a href="{concat($sistoryPath,$image-chapter-id,'.html#',$figure-id)}">
                         <xsl:value-of select="tei:head"/>
                     </a>
                 </li>
@@ -591,8 +619,15 @@
             <xsl:for-each select="//tei:table[tei:head]">
                 <xsl:variable name="table-id" select="@xml:id"/>
                 <xsl:variable name="table-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="$table-chapter-id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
                 <li>
-                    <a href="{concat($table-chapter-id,'.html#',$table-id)}">
+                    <a href="{concat($sistoryPath,$table-chapter-id,'.html#',$table-id)}">
                         <xsl:value-of select="tei:head"/>
                     </a>
                 </li>
@@ -703,6 +738,13 @@
                         <xsl:text disable-output-escaping="yes"><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></xsl:text>
                         <xsl:for-each select="//tei:persName[@ref = $person-id]">
                             <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                            <xsl:variable name="sistoryPath">
+                                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                    <xsl:call-template name="sistoryPath">
+                                        <xsl:with-param name="chapterID" select="$ancestorChapter-id"/>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
                             <xsl:variable name="numLevel">
                                 <xsl:number count="tei:text//tei:persName" level="any"/>
                             </xsl:variable>
@@ -712,7 +754,7 @@
                             <xsl:variable name="persNameID">
                                 <xsl:value-of select="concat('person-',$numPerson)"/>
                             </xsl:variable>
-                            <a href="{concat($ancestorChapter-id,'.html#',$persNameID)}">
+                            <a href="{concat($sistoryPath,$ancestorChapter-id,'.html#',$persNameID)}">
                                 <xsl:value-of select="substring-after($persNameID,'person-')"/>
                             </a>
                             <xsl:if test="position() != last()">
@@ -836,6 +878,13 @@
                         <xsl:text disable-output-escaping="yes"><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></xsl:text>
                         <xsl:for-each select="//tei:text//tei:placeName[@ref = $place-id]">
                             <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                            <xsl:variable name="sistoryPath">
+                                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                    <xsl:call-template name="sistoryPath">
+                                        <xsl:with-param name="chapterID" select="$ancestorChapter-id"/>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
                             <xsl:variable name="numLevel">
                                 <xsl:number count="tei:text//tei:placeName" level="any"/>
                             </xsl:variable>
@@ -845,7 +894,7 @@
                             <xsl:variable name="placeNameID">
                                 <xsl:value-of select="concat('kraj-',$numPlaceName)"/>
                             </xsl:variable>
-                            <a href="{concat($ancestorChapter-id,'.html#',$placeNameID)}">
+                            <a href="{concat($sistoryPath,$ancestorChapter-id,'.html#',$placeNameID)}">
                                 <xsl:value-of select="substring-after($placeNameID,'kraj-')"/>
                             </a>
                             <xsl:if test="position() != last()">
@@ -854,6 +903,13 @@
                         </xsl:for-each>
                         <xsl:for-each select="//tei:text//tei:placeName[@corresp = $place-url]">
                             <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                            <xsl:variable name="sistoryPath">
+                                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                    <xsl:call-template name="sistoryPath">
+                                        <xsl:with-param name="chapterID" select="$ancestorChapter-id"/>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
                             <xsl:variable name="numLevel">
                                 <xsl:number count="tei:text//tei:placeName" level="any"/>
                             </xsl:variable>
@@ -863,7 +919,7 @@
                             <xsl:variable name="placeNameID">
                                 <xsl:value-of select="concat('kraj-',$numPlaceName)"/>
                             </xsl:variable>
-                            <a href="{concat($ancestorChapter-id,'.html#',$placeNameID)}">
+                            <a href="{concat($sistoryPath,$ancestorChapter-id,'.html#',$placeNameID)}">
                                 <xsl:value-of select="substring-after($placeNameID,'kraj-')"/>
                             </a>
                             <xsl:if test="position() != last()">
@@ -925,6 +981,13 @@
                         <xsl:text disable-output-escaping="yes"><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></xsl:text>
                         <xsl:for-each select="//tei:orgName[@ref = $organization-id]">
                             <xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
+                            <xsl:variable name="sistoryPath">
+                                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                    <xsl:call-template name="sistoryPath">
+                                        <xsl:with-param name="chapterID" select="$ancestorChapter-id"/>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
                             <xsl:variable name="numLevel">
                                 <xsl:number count="tei:text//tei:orgName" level="any"/>
                             </xsl:variable>
@@ -934,7 +997,7 @@
                             <xsl:variable name="orgNameID">
                                 <xsl:value-of select="concat('org-',$numOrganization)"/>
                             </xsl:variable>
-                            <a href="{concat($ancestorChapter-id,'.html#',$orgNameID)}">
+                            <a href="{concat($sistoryPath,$ancestorChapter-id,'.html#',$orgNameID)}">
                                 <xsl:value-of select="substring-after($orgNameID,'org-')"/>
                             </a>
                             <xsl:if test="position() != last()">
@@ -949,6 +1012,9 @@
     
     <xsl:template name="search">
         <xsl:variable name="tei-id" select="ancestor::tei:TEI/@xml:id"/>
+        <xsl:variable name="sistoryAbsolutePath">
+            <xsl:if test="$chapterAsSIstoryPublications='true'">http://www.sistory.si</xsl:if>
+        </xsl:variable>
         <div class="tipue_search_content">
             <xsl:text> </xsl:text>
             <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
@@ -972,7 +1038,7 @@
                     <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;','&#x20;'))"/>
                     <xsl:text>", "tags": "</xsl:text>
                     <xsl:text>", "loc": "</xsl:text>
-                    <xsl:value-of select="$generatedLink"/>
+                    <xsl:value-of select="concat($sistoryAbsolutePath,$generatedLink)"/>
                     <!--<xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>-->
                     <xsl:text>" }</xsl:text>
                     <xsl:if test="position() != last()">
@@ -1008,7 +1074,7 @@
     <xsl:template name="TOC-title-author">
         <xsl:if test="//tei:front">
             <ul class="toc toc_front">
-                <xsl:for-each select="//tei:front/tei:div | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')]">
+                <xsl:for-each select="//tei:front/tei:div | //tei:front/tei:divGen[not(@type = 'search')][not(@type = 'cip')][not(@type = 'teiHeader')][not(@type = 'toc')]">
                     <xsl:call-template name="TOC-title-author-li"/>
                 </xsl:for-each>
             </ul>

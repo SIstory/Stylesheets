@@ -9,6 +9,11 @@
     <!--<xsl:param name="path-general">../../../</xsl:param>-->
     <xsl:param name="path-general">http://www2.sistory.si/</xsl:param>
     
+    <!-- Če je chapterAsSIstoryPublications true, potem generirani HTML dokumenti posameznih div
+        poglavij pripadajo samostojnim SIstory publikacijam. SIstory ID teh publikacij je 
+        zapisan v idno[@type='sistory'], kateri je z corresp atributom usmerjen na ustrezne div. -->
+    <xsl:param name="chapterAsSIstoryPublications"></xsl:param>
+    
     <!-- If you want to have sticky title nav bar: true  -->
     <xsl:param name="title-bar-sticky">true</xsl:param>
     

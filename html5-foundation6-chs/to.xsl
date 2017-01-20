@@ -97,6 +97,12 @@
    <xsl:param name="numberParagraphs">true</xsl:param>
    <xsl:param name="numberTables">true</xsl:param>
    
+   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl" class="figures" type="string">
+      <desc>Directory specification to put before names of graphics files,
+         unless they start with "./"</desc>
+   </doc>
+   <xsl:param name="graphicsPrefix"/>
+   
    <!-- pobrano iz Stylesheets-master/common/functions.xsl  -->
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[localisation] dummy template for overriding in a local system<param name="word">the word(s) to translate</param>
@@ -679,6 +685,154 @@
       </xsl:choose>
    </xsl:template>
    
+   <xsl:template name="sistoryPath">
+      <xsl:param name="chapterID"/>
+      <xsl:variable name="sistoryID">
+         <xsl:call-template name="sistoryID">
+            <xsl:with-param name="chapterID" select="$chapterID"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="string-length($sistoryID) gt 0">
+         <xsl:value-of select="concat('/cdn/publikacije/',round(xs:integer($sistoryID) div 1000) * 1000 + 1,'-',round(xs:integer($sistoryID) div 1000) * 1000 + 1000,'/',$sistoryID,'/')"/>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template name="sistoryID">
+      <xsl:param name="chapterID"/>
+      <xsl:variable name="sistoryIDs">
+         <xsl:for-each select="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
+            <xsl:variable name="sistory" select="."/>
+            <xsl:variable name="corresp" select="@corresp"/>
+            <xsl:for-each select="tokenize($corresp,' ')">
+               <corresp sistoryID="{$sistory}">
+                  <xsl:value-of select="substring-after(.,'#')"/>
+               </corresp>
+            </xsl:for-each>
+         </xsl:for-each>
+         <xsl:for-each select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
+            <xsl:variable name="sistory" select="."/>
+            <xsl:variable name="corresp" select="@corresp"/>
+            <xsl:for-each select="tokenize($corresp,' ')">
+               <corresp sistoryID="{$sistory}">
+                  <xsl:value-of select="substring-after(.,'#')"/>
+               </corresp>
+            </xsl:for-each>
+         </xsl:for-each>
+      </xsl:variable>
+      <xsl:for-each select="$sistoryIDs/html:corresp[. = $chapterID]">
+         <xsl:value-of select="@sistoryID"/>
+      </xsl:for-each>
+   </xsl:template>
+   
+   <xsl:template match="*" mode="generateLink">
+      <xsl:variable name="ident">
+         <xsl:apply-templates mode="ident" select="."/>
+      </xsl:variable>
+      <xsl:variable name="depth">
+         <xsl:apply-templates mode="depth" select="."/>
+      </xsl:variable>
+      <xsl:variable name="keep" select="tei:keepDivOnPage(.)"/>
+      <xsl:variable name="LINK">
+         <xsl:choose>
+            <xsl:when test="$filePerPage='true'">
+               <xsl:choose>
+                  <xsl:when test="preceding::tei:pb">
+                     <xsl:apply-templates select="preceding::tei:pb[1]"
+                        mode="ident"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:text>index</xsl:text>
+                  </xsl:otherwise>
+               </xsl:choose>
+               <xsl:value-of select="$standardSuffix"/>
+            </xsl:when>
+            <xsl:when test="ancestor::tei:elementSpec and not($STDOUT='true')">
+               <xsl:sequence select="concat('ref-',ancestor::tei:elementSpec/@ident,$standardSuffix,'#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="ancestor::tei:classSpec and not($STDOUT='true')">
+               <xsl:sequence select="concat('ref-',ancestor::tei:classSpec/@ident,$standardSuffix,'#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="not ($STDOUT='true') and ancestor::tei:back and not($splitBackmatter='true')">
+               <xsl:value-of select="concat($masterFile,$standardSuffix,'#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="not($STDOUT='true') and ancestor::tei:front
+               and not($splitFrontmatter='true')">
+               <xsl:value-of select="concat($masterFile,$standardSuffix,'#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="not($keep) and $STDOUT='true' and
+               number($depth) &lt;= number($splitLevel)">
+               <xsl:sequence select="concat($masterFile,$standardSuffix,$urlChunkPrefix,$ident)"/>
+            </xsl:when>
+            <xsl:when test="self::tei:text and $splitLevel=0">
+               <xsl:value-of select="concat($ident,$standardSuffix)"/>
+            </xsl:when>
+            <xsl:when test="number($splitLevel)= -1 and
+               ancestor::tei:teiCorpus">
+               <xsl:value-of select="$masterFile"/>
+               <xsl:call-template name="addCorpusID"/>
+               <xsl:value-of select="$standardSuffix"/>
+               <xsl:value-of select="concat('#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="number($splitLevel)= -1">
+               <xsl:value-of select="concat('#',$ident)"/>
+            </xsl:when>
+            <xsl:when test="number($depth) &lt;= number($splitLevel) and not($keep)">
+               <!-- dodana relativna pot v okviru SIstory -->
+               <xsl:variable name="sistoryPath">
+                  <xsl:if test="$chapterAsSIstoryPublications='true'">
+                     <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="$ident"/>
+                     </xsl:call-template>
+                  </xsl:if>
+               </xsl:variable>
+               <xsl:value-of select="concat($sistoryPath,$ident,$standardSuffix)"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:variable name="parent">
+                  <xsl:call-template name="locateParentDiv"/>
+               </xsl:variable>
+               <xsl:choose>
+                  <xsl:when test="$STDOUT='true'">
+                     <xsl:sequence select="concat($masterFile,$urlChunkPrefix,$parent,'#',$ident)"/>
+                  </xsl:when>
+                  <xsl:when test="ancestor::tei:group">
+                     <xsl:sequence select="concat($parent,$standardSuffix,'#',$ident)"/>
+                  </xsl:when>
+                  <xsl:when test="ancestor::tei:floatingText">
+                     <xsl:sequence select="concat($parent,$standardSuffix,'#',$ident)"/>
+                  </xsl:when>
+                  <xsl:when test="$keep and number($depth=0)">
+                     <xsl:sequence select="concat('#',$ident)"/>
+                  </xsl:when>
+                  <xsl:when test="$keep">
+                     <xsl:sequence select="concat($masterFile,$standardSuffix,'#',$ident)"/>
+                  </xsl:when>
+                  <xsl:when test="ancestor::tei:div and tei:keepDivOnPage(ancestor::tei:div[last()])">
+                     <xsl:sequence select="concat('#',$ident)"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <!-- dodana relativna pot v okviru SIstory -->
+                     <xsl:variable name="sistoryPath">
+                        <xsl:if test="$chapterAsSIstoryPublications='true'">
+                           <xsl:call-template name="sistoryPath">
+                              <xsl:with-param name="chapterID" select="$parent"/>
+                           </xsl:call-template>
+                        </xsl:if>
+                     </xsl:variable>
+                     <xsl:sequence select="concat($sistoryPath,$parent,$standardSuffix,'#',$ident)"/>
+                  </xsl:otherwise>
+               </xsl:choose>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <!--
+      <xsl:message>GENERATELINK <xsl:value-of
+      select="(name(),$ident,$depth,string($keep),$LINK)"
+	  separator="|"/></xsl:message>
+      -->
+      <xsl:value-of select="$LINK"/>
+   </xsl:template>
+   
    <!-- NASLOVNA STRAN -->
    <xsl:template match="tei:titlePage">
       <!-- avtor -->
@@ -752,6 +906,5 @@
          </xsl:for-each>
       </p>
    </xsl:template>
-   
    
 </xsl:stylesheet>
