@@ -693,7 +693,7 @@
          </xsl:call-template>
       </xsl:variable>
       <xsl:if test="string-length($sistoryID) gt 0">
-         <xsl:value-of select="concat('/cdn/publikacije/',round(xs:integer($sistoryID) div 1000) * 1000 + 1,'-',round(xs:integer($sistoryID) div 1000) * 1000 + 1000,'/',$sistoryID,'/')"/>
+         <xsl:value-of select="concat('/cdn/publikacije/',(xs:integer(round(number($sistoryID)) div 1000) * 1000) + 1,'-',(xs:integer(round(number($sistoryID)) div 1000) * 1000) + 1000,'/',$sistoryID,'/')"/>
       </xsl:if>
    </xsl:template>
    

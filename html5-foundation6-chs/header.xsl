@@ -217,21 +217,11 @@
         </li>
         <!-- kolofon CIP -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']">
-            <xsl:variable name="sistoryPath-cip">
-                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                    <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </xsl:variable>
-            <li>
-                <xsl:if test=".[@type='cip']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <a href="{concat($sistoryPath-cip,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id,'.html')}">
-                    <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/tei:head[1]"/>
-                </a>
-            </li>
+            <xsl:call-template name="header-cip">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- kolofon CIP za teiCorpus za revije -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-cip='true'">
@@ -247,21 +237,11 @@
         </xsl:if>
         <!-- TEI kolofon -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']">
-            <xsl:variable name="sistoryPath-teiHeader">
-                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                    <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </xsl:variable>
-            <li>
-                <xsl:if test=".[@type='teiHeader']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <a href="{concat($sistoryPath-teiHeader,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id,'.html')}">
-                    <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/tei:head[1]"/>
-                </a>
-            </li>
+            <xsl:call-template name="header-teiHeader">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- TEI kolofon za teiCorpus za revije -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-teiHeader='true'">
@@ -289,406 +269,503 @@
         </xsl:if>
         <!-- kazalo toc -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']">
-            <li>
-                <xsl:if test=".[@type='toc']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi toc -->
-                <xsl:variable name="sistoryPath-toc1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-toc1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-toc-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-toc">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-toc,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-toc,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-toc">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- Uvodna poglavja v tei:front -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div">
-            <li>
-                <xsl:if test=".[parent::tei:front][self::tei:div]">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi front/div -->
-                <xsl:variable name="sistoryPath-front1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-front1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-front-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-front">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-front,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-front,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-front">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- Osrednji del besedila v tei:body - Poglavja -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div">
-            <li>
-                <xsl:if test=".[ancestor::tei:body][self::tei:div]">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi body/div -->
-                <xsl:variable name="sistoryPath-body1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-body1,ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-body-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div">
-                            <!--<xsl:variable name="chapters-id" select="@xml:id"/>-->
-                            <li>
-                                <xsl:if test="descendant-or-self::tei:div[@xml:id = $thisChapter-id]">
-                                    <xsl:attribute name="class">active</xsl:attribute>
-                                </xsl:if>
-                                <a>
-                                    <xsl:attribute name="href">
-                                        <xsl:apply-templates mode="generateLink" select="."/>
-                                    </xsl:attribute>
-                                    <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
-                                </a>
-                                <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                    <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
-                                    <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                </xsl:call-template>
-                            </li>
-                            <!--<xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($thisChapter-id,'.html')}">
-                                            <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($chapters-id,'.html')}">
-                                            <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>-->
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-body">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- viri in literatura v tei:back -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr']">
-            <li>
-                <xsl:if test=".[@type='bibliogr']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi div z bibliogr -->
-                <xsl:variable name="sistoryPath-bibliogr1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-bibliogr1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id,'.html')}">
-                    <xsl:sequence select="tei:i18n('Bibliografija')"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr']">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-bibliogr">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-bibliogr,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-bibliogr,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-bibliogr">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- Priloge v tei:back -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']">
-            <li>
-                <xsl:if test=".[@type='appendix']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi div z appendix -->
-                <xsl:variable name="sistoryPath-appendix1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-appendix1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-appendix-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-appendix">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-appendix,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-appendix,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-appendix">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- povzetki -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']">
-            <li>
-                <xsl:if test=".[@type='summary']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi div z summary -->
-                <xsl:variable name="sistoryPath-summary1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-summary1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-summary-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-summary">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-summary,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-summary,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                        <xsl:call-template name="title-bar-list-of-contents-subchapters">
-                                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                                        </xsl:call-template>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-summary">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- Indeksi (oseb, krajev in organizacij) v divGen -->
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']">
-            <li>
-                <xsl:if test=".[@type='index']">
-                    <xsl:attribute name="class">active</xsl:attribute>
-                </xsl:if>
-                <!-- povezava na prvi indeks -->
-                <xsl:variable name="sistoryPath-index1">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <a href="{concat($sistoryPath-index1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id,'.html')}">
-                    <xsl:call-template name="nav-index-head"/>
-                </a>
-                <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][2]">
-                    <ul>
-                        <xsl:call-template name="attribute-title-bar-type">
-                            <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
-                        </xsl:call-template>
-                        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']">
-                            <xsl:variable name="chapters-id" select="@xml:id"/>
-                            <xsl:variable name="sistoryPath-index">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID" select="$chapters-id"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <xsl:choose>
-                                <xsl:when test=".[$chapters-id eq $thisChapter-id]">
-                                    <li class="active">
-                                        <a href="{concat($sistoryPath-index,$thisChapter-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                    </li>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <li>
-                                        <a href="{concat($sistoryPath-index,$chapters-id,'.html')}">
-                                            <xsl:value-of select="tei:head[1]"/>
-                                        </a>
-                                    </li>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
-            </li>
+            <xsl:call-template name="header-back-index">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:template name="header-cip">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <xsl:variable name="sistoryPath-cip">
+            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                <xsl:call-template name="sistoryPath">
+                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id"/>
+                </xsl:call-template>
+            </xsl:if>
+        </xsl:variable>
+        <li>
+            <xsl:if test=".[@type='cip']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <a href="{concat($sistoryPath-cip,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id,'.html')}">
+                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/tei:head[1]"/>
+            </a>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-teiHeader">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <xsl:variable name="sistoryPath-teiHeader">
+            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                <xsl:call-template name="sistoryPath">
+                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id"/>
+                </xsl:call-template>
+            </xsl:if>
+        </xsl:variable>
+        <li>
+            <xsl:if test=".[@type='teiHeader']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <a href="{concat($sistoryPath-teiHeader,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id,'.html')}">
+                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/tei:head[1]"/>
+            </a>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-toc">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[@type='toc']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi toc -->
+            <xsl:variable name="sistoryPath-toc1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-toc1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-toc-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-toc">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-toc,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-toc,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-front">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[parent::tei:front][self::tei:div]">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi front/div -->
+            <xsl:variable name="sistoryPath-front1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-front1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-front-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-front">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-front,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-front,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-body">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[ancestor::tei:body][self::tei:div]">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi body/div -->
+            <xsl:variable name="sistoryPath-body1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-body1,ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-body-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div">
+                        <!--<xsl:variable name="chapters-id" select="@xml:id"/>-->
+                        <li>
+                            <xsl:if test="descendant-or-self::tei:div[@xml:id = $thisChapter-id]">
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
+                            <a>
+                                <xsl:attribute name="href">
+                                    <xsl:apply-templates mode="generateLink" select="."/>
+                                </xsl:attribute>
+                                <xsl:apply-templates select="tei:head[1]" mode="chapters-head"/>
+                            </a>
+                            <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                                <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                            </xsl:call-template>
+                        </li>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-bibliogr">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[@type='bibliogr']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi div z bibliogr -->
+            <xsl:variable name="sistoryPath-bibliogr1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-bibliogr1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id,'.html')}">
+                <xsl:sequence select="tei:i18n('Bibliografija')"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr']">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-bibliogr">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-bibliogr,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-bibliogr,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-appendix">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[@type='appendix']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi div z appendix -->
+            <xsl:variable name="sistoryPath-appendix1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-appendix1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-appendix-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-appendix">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-appendix,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-appendix,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-summary">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[@type='summary']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi div z summary -->
+            <xsl:variable name="sistoryPath-summary1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-summary1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-summary-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-summary">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-summary,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-summary,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                    <xsl:call-template name="title-bar-list-of-contents-subchapters">
+                                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                                    </xsl:call-template>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+    
+    <xsl:template name="header-back-index">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="title-bar-type"/>
+        <xsl:param name="sistoryParentPath"/>
+        <li>
+            <xsl:if test=".[@type='index']">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <!-- povezava na prvi indeks -->
+            <xsl:variable name="sistoryPath-index1">
+                <xsl:if test="$chapterAsSIstoryPublications='true'">
+                    <xsl:call-template name="sistoryPath">
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:variable>
+            <a href="{concat($sistoryPath-index1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-index-head"/>
+            </a>
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][2]">
+                <ul>
+                    <xsl:call-template name="attribute-title-bar-type">
+                        <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
+                    </xsl:call-template>
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']">
+                        <xsl:variable name="chapters-id" select="@xml:id"/>
+                        <xsl:variable name="sistoryPath-index">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="$chapters-id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <xsl:choose>
+                            <xsl:when test=".[$chapters-id eq $thisChapter-id]">
+                                <li class="active">
+                                    <a href="{concat($sistoryPath-index,$thisChapter-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                </li>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <li>
+                                    <a href="{concat($sistoryPath-index,$chapters-id,'.html')}">
+                                        <xsl:value-of select="tei:head[1]"/>
+                                    </a>
+                                </li>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
+        </li>
     </xsl:template>
     
     <xsl:template match="tei:head" mode="chapters-head">
