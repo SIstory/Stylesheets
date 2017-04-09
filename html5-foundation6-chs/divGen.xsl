@@ -94,54 +94,8 @@
                             </xsl:if>
                             <xsl:call-template name="startHook"/>
                             <!-- VSTAVI VSEBINO divGen strani -->
-                            <!-- kolofon CIP -->
-                            <xsl:if test="self::tei:divGen[@type='cip']">
-                                <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon"/>
-                            </xsl:if>
-                            <!-- TEI kolofon -->
-                            <xsl:if test="self::tei:divGen[@type='teiHeader']">
-                                <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader"/>
-                            </xsl:if>
-                            <!-- kazalo vsebine toc -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='toc']">
-                                <xsl:call-template name="mainTOC"/>
-                            </xsl:if>
-                            <!-- kazalo slik -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='images'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='images']">
-                                <xsl:call-template name="images"/>
-                            </xsl:if>
-                            <!-- kazalo grafikonov -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='charts'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='charts']">
-                                <xsl:call-template name="charts"/>
-                            </xsl:if>
-                            <!-- kazalo tabel -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='tables']">
-                                <xsl:call-template name="tables"/>
-                            </xsl:if>
-                            <!-- kazalo vsebine toc, ki izpiše samo glavne naslove poglavij, skupaj z imeni avtorjev poglavij -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleAuthor'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleAuthor']">
-                                <xsl:call-template name="TOC-title-author"/>
-                            </xsl:if>
-                            <!-- kazalo vsebine toc, ki izpiše samo naslove poglavij, kjer ima div atributa type in xml:id -->
-                            <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleType'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleType']">
-                                <xsl:call-template name="TOC-title-type"/>
-                            </xsl:if>
-                            <!-- seznam (indeks) oseb -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='persons']">
-                                <xsl:call-template name="persons"/>
-                            </xsl:if>
-                            <!-- seznam (indeks) krajev -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='places'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='places']">
-                                <xsl:call-template name="places"/>
-                            </xsl:if>
-                            <!-- seznam (indeks) organizacij -->
-                            <xsl:if test="self::tei:divGen[@type='index'][@xml:id='organizations'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='organizations']">
-                                <xsl:call-template name="organizations"/>
-                            </xsl:if>
-                            <!-- iskalnik -->
-                            <xsl:if test="self::tei:divGen[@type='search']">
-                                <xsl:call-template name="search"/>
-                            </xsl:if>
+                            <!-- zaradi lažjega nadzora nad procesiranjem divGen, jih procesiram preko ločenega call-template -->
+                            <xsl:call-template name="divGen-main-content"/>
                             
                             <!--<xsl:call-template name="makeDivBody">
                                                 <xsl:with-param name="depth" select="count(ancestor::tei:div) + 1"/>
@@ -191,13 +145,66 @@
         </xsl:if>
     </xsl:template>
     
+    <xsl:template name="divGen-main-content">
+        <!-- kolofon CIP -->
+        <xsl:if test="self::tei:divGen[@type='cip']">
+            <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon"/>
+        </xsl:if>
+        <!-- TEI kolofon -->
+        <xsl:if test="self::tei:divGen[@type='teiHeader']">
+            <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader"/>
+        </xsl:if>
+        <!-- kazalo vsebine toc -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='toc']">
+            <xsl:call-template name="mainTOC"/>
+        </xsl:if>
+        <!-- kazalo slik -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='images'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='images']">
+            <xsl:call-template name="images"/>
+        </xsl:if>
+        <!-- kazalo grafikonov -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='charts'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='charts']">
+            <xsl:call-template name="charts"/>
+        </xsl:if>
+        <!-- kazalo tabel -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='tables']">
+            <xsl:call-template name="tables"/>
+        </xsl:if>
+        <!-- kazalo vsebine toc, ki izpiše samo glavne naslove poglavij, skupaj z imeni avtorjev poglavij -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleAuthor'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleAuthor']">
+            <xsl:call-template name="TOC-title-author"/>
+        </xsl:if>
+        <!-- kazalo vsebine toc, ki izpiše samo naslove poglavij, kjer ima div atributa type in xml:id -->
+        <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleType'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleType']">
+            <xsl:call-template name="TOC-title-type"/>
+        </xsl:if>
+        <!-- seznam (indeks) oseb -->
+        <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='persons']">
+            <xsl:call-template name="persons"/>
+        </xsl:if>
+        <!-- seznam (indeks) krajev -->
+        <xsl:if test="self::tei:divGen[@type='index'][@xml:id='places'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='places']">
+            <xsl:call-template name="places"/>
+        </xsl:if>
+        <!-- seznam (indeks) organizacij -->
+        <xsl:if test="self::tei:divGen[@type='index'][@xml:id='organizations'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='organizations']">
+            <xsl:call-template name="organizations"/>
+        </xsl:if>
+        <!-- iskalnik -->
+        <xsl:if test="self::tei:divGen[@type='search']">
+            <xsl:call-template name="search"/>
+        </xsl:if>
+    </xsl:template>
+    
     <!-- KOLOFON - CIP -->
     
     <xsl:template match="tei:TEI/tei:teiHeader/tei:fileDesc | tei:teiCorpus/tei:teiHeader/tei:fileDesc" mode="kolofon">
         <xsl:apply-templates select="tei:titleStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:seriesStmt" mode="kolofon"/>
         <xsl:apply-templates select="tei:editionStmt" mode="kolofon"/>
-        <xsl:call-template name="countWords"/>
+        <xsl:if test="parent::tei:teiHeader[parent::tei:TEI]">
+            <xsl:call-template name="countWords"/>
+        </xsl:if>
         <xsl:apply-templates select="tei:publicationStmt" mode="kolofon"/>
     </xsl:template>
     
@@ -265,7 +272,7 @@
         <p itemprop="isPartOf">
             <xsl:value-of select="tei:title"/>
             <xsl:if test="tei:biblScope[@unit='volume']">
-                <xsl:value-of select="concat('; ',tei:biblScope)"/>
+                <xsl:value-of select="concat('; ',tei:biblScope[@unit='volume'])"/>
             </xsl:if>
         </p>
     </xsl:template>
@@ -1175,7 +1182,7 @@
     </xsl:template>
     
     <xsl:template name="countWords">
-        <xsl:variable name="string" select="normalize-space(//tei:text)"/> 
+        <xsl:variable name="string" select="normalize-space(ancestor::tei:TEI/tei:text)"/> 
         <p>
             <xsl:value-of select="concat(tei:i18n('WordCount'),': ')"/>
             <xsl:value-of select="concat(tei:i18n('Words'),' ')"/>
