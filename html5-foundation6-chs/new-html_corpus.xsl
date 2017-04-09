@@ -239,6 +239,20 @@
                                                             <xsl:when test="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')]">
                                                                 <xsl:value-of select="concat('http://hdl.handle.net/11686/',substring-after(ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')],'sistory.'))"/>
                                                             </xsl:when>
+                                                            <xsl:when test="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
+                                                                <xsl:variable name="teiID" select="ancestor::tei:TEI/@xml:id"/>
+                                                                <xsl:variable name="sistoryID">
+                                                                    <xsl:for-each select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
+                                                                        <xsl:variable name="idno" select="."/>
+                                                                        <xsl:for-each select="tokenize(@corresp,' ')">
+                                                                            <xsl:if test="substring-after(.,'#') = $teiID">
+                                                                                <xsl:value-of select="$idno"/>
+                                                                            </xsl:if>
+                                                                        </xsl:for-each>
+                                                                    </xsl:for-each>
+                                                                </xsl:variable>
+                                                                <xsl:value-of select="concat('http://hdl.handle.net/11686/',$sistoryID)"/>
+                                                            </xsl:when>
                                                             <xsl:otherwise>
                                                                 <xsl:choose>
                                                                     <xsl:when test="ancestor::tei:TEI/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref">

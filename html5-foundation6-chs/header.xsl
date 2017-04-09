@@ -225,12 +225,18 @@
         </xsl:if>
         <!-- kolofon CIP za teiCorpus za revije -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-cip='true'">
-            <!-- TODO sistoryPath za teiCorpus -->
             <li>
                 <xsl:if test="$thisChapter-id='cip'">
                     <xsl:attribute name="class">active</xsl:attribute>
                 </xsl:if>
-                <a href="impressum.html">
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="self::tei:teiCorpus/@xml:id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
+                <a href="{concat($sistoryPath,'impressum.html')}">
                     <xsl:sequence select="tei:i18n('impressum')"/>
                 </a>
             </li>
@@ -245,24 +251,36 @@
         </xsl:if>
         <!-- TEI kolofon za teiCorpus za revije -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-teiHeader='true'">
-            <!-- TODO sistoryPath za teiCorpus -->
             <li>
                 <xsl:if test="$thisChapter-id='teiHeader'">
                     <xsl:attribute name="class">active</xsl:attribute>
                 </xsl:if>
-                <a href="teiHeader.html">
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="self::tei:teiCorpus/@xml:id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
+                <a href="{concat($sistoryPath,'teiHeader.html')}">
                     <xsl:sequence select="tei:i18n('teiHeader')"/>
                 </a>
             </li>
         </xsl:if>
         <!-- kazalo toc titleAuthor za teiCorpus za revije (predpogoj: tei:text mora imeti @n) -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-toc_titleAuthor='true'">
-            <!-- TODO sistoryPath za teiCorpus -->
             <li>
                 <xsl:if test="$thisChapter-id='tocJournal'">
                     <xsl:attribute name="class">active</xsl:attribute>
                 </xsl:if>
-                <a href="tocJournal.html">
+                <xsl:variable name="sistoryPath">
+                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                        <xsl:call-template name="sistoryPath">
+                            <xsl:with-param name="chapterID" select="self::tei:teiCorpus/@xml:id"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:variable>
+                <a href="{concat($sistoryPath,'tocJournal.html')}">
                     <xsl:sequence select="tei:i18n('tocJournal')"/>
                 </a>
             </li>

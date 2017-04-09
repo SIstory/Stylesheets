@@ -212,7 +212,7 @@
     </xsl:template>
     
     <!-- imena organizacij -->
-    <xsl:template match="tei:orgName">
+    <xsl:template match="tei:orgName[ancestor::tei:text]">
         <xsl:variable name="numLevel">
             <xsl:number count="tei:text//tei:orgName" level="any"/>
         </xsl:variable>
