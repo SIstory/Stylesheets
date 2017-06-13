@@ -26,6 +26,17 @@
     -->
     <xsl:param name="element-gloss-teiHeader-lang">sl</xsl:param>
     
+    <!-- za tei:listPerson[@type='data'] | tei:listOrg[@type='data'] | tei:listEvent[@type='data']:
+        če je $element-gloss-namesdates true,
+        se izpišejo gloss imena za elemente, drugače je name() elementa -->
+    <xsl:param name="element-gloss-namesdates">true</xsl:param>
+    <!-- za tei:listPerson[@type='data'] | tei:listOrg[@type='data'] | tei:listEvent[@type='data']:
+         določi se jezik izpisa za gloss elementa, lahko samo za:
+         - sl
+         - en
+    -->
+    <xsl:param name="element-gloss-namesdates-lang">sl</xsl:param>
+    
     <!-- V html/head izpisani metapodatki -->
     <xsl:param name="description"></xsl:param>
     <xsl:param name="keywords"></xsl:param>

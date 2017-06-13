@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="17.0">
+<project version="18.1">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="17.0" xml:space="preserve">
-                <map>
+            <serialized version="18.1" xml:space="preserve">
+                <serializableOrderedMap>
                     <entry>
                         <String>enable.project.master.files.support</String>
                         <Boolean>true</Boolean>
                     </entry>
-                </map>
+                </serializableOrderedMap>
             </serialized>
         </options>
     </meta>
@@ -21,8 +21,11 @@
         <file name="divGen.xsl"/>
         <file name="header.xsl"/>
         <file name="my-html_core.xsl"/>
+        <file name="my-html_namesdates.xsl"/>
         <file name="my-html_param.xsl"/>
-        <file name="new-html_core.xsl"/>
+        <file name="file:/Users/administrator/Documents/moje/publikacije-XSLT/sistory/html5-foundation6-chs/new-html_core.xsl">
+            <file name="my-html_namesdates.xsl"/>
+        </file>
         <file name="new-html_corpus.xsl"/>
         <file name="new-html_figures.xsl"/>
         <file name="to.xsl"/>

@@ -27,6 +27,7 @@
    <xsl:import href="divGen.xsl"/>
    
    <xsl:import href="my-html_core.xsl"/>
+   <xsl:import href="my-html_namesdates.xsl"/>
    <xsl:import href="bibliography.xsl"/>
    
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet" type="stylesheet">
