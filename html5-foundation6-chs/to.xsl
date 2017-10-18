@@ -200,7 +200,8 @@
          <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory-sticky_title_bar.css')"/>
       </xsl:if>
       <link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css" rel="stylesheet" type="text/css" />
-      <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/3.1/moj_class_tipuesearch.css')}"  rel="stylesheet" type="text/css" />
+      <link href="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/css/normalize.css')}" rel="stylesheet" type="text/css" />
+      <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}"  rel="stylesheet" type="text/css" />
    </xsl:template>
    <xsl:template name="javascriptHook">
       <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/jquery.js')}"></script>
@@ -208,15 +209,16 @@
       <xsl:if test="//tei:divGen[@type='search']">
          <!-- v spodnjem js je shranjena vsebina za iskanje -->
          <script src="tipuesearch_content.js"></script>
-         <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/3.1/tipuesearch/tipuesearch_set.js')}"></script>
          <xsl:choose>
             <xsl:when test="$documentationLanguage = 'en'">
-               <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch-en.js')}"></script>
+               <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
             </xsl:when>
+            <!-- drugače je moj slovenski prevod -->
             <xsl:otherwise>
-               <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/3.1/moj_class_tipuesearch.js')}"></script>
+               <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/6.1/tipuesearch_set-slv.js')}"></script>
             </xsl:otherwise>
          </xsl:choose>
+         <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch.min.js')}"></script>
       </xsl:if>
       <!-- za highcharts -->
       <xsl:if test="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']]">

@@ -1022,7 +1022,7 @@
         <xsl:variable name="sistoryAbsolutePath">
             <xsl:if test="$chapterAsSIstoryPublications='true'">http://www.sistory.si</xsl:if>
         </xsl:variable>
-        <div class="tipue_search_content">
+        <div id="tipue_search_content">
             <xsl:text> </xsl:text>
             <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
             <xsl:result-document href="{$datoteka-js}" method="text" encoding="UTF-8">
@@ -1053,9 +1053,9 @@
                     <xsl:value-of select="normalize-space(translate(translate(parent::tei:div/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
                     <!--<xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>-->
                     <xsl:text>", "text": "</xsl:text>
-                    <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;','&#x20;'))"/>
+                    <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;&#92;','&#x20;'))"/>
                     <xsl:text>", "tags": "</xsl:text>
-                    <xsl:text>", "loc": "</xsl:text>
+                    <xsl:text>", "url": "</xsl:text>
                     <xsl:value-of select="concat($sistoryAbsolutePath,$generatedLink)"/>
                     <!--<xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>-->
                     <xsl:text>" }</xsl:text>
@@ -1074,12 +1074,12 @@
         
         <!-- JavaScript, s katerim se požene iskanje -->
         <xsl:text disable-output-escaping="yes"><![CDATA[<script>
-            $(document).ready(function() {
-            $('.tipue_search_input').tipuesearch({
-            'show': 10,
-            'highlightEveryTerm': true,
-            'descriptiveWords': 250});
-            });
+       $(document).ready(function() {
+          $('#tipue_search_input').tipuesearch({
+          'show': 10,
+          'descriptiveWords': 250
+          });
+        });
         </script>]]></xsl:text>
     </xsl:template>
     

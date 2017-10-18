@@ -153,10 +153,10 @@
                 <form action="{concat($sistoryPath-search,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']/@xml:id,'.html')}">
                     <div class="row collapse">
                         <div class="small-10 large-11 columns">
-                            <input type="text" name="q" class="tipue_search_input" placeholder="{tei:i18n('Search placeholder')}" />
+                            <input type="text" name="q" id="tipue_search_input" placeholder="{tei:i18n('Search placeholder')}"/>
                         </div>
                         <div class="small-2 large-1 columns">
-                            <input type="button" class="tipue_search_button" onclick="this.form.submit();"/>
+                            <img type="button" class="tipue_search_button"/>
                         </div>
                     </div>
                 </form>
