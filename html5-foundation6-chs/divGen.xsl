@@ -1077,7 +1077,8 @@
        $(document).ready(function() {
           $('#tipue_search_input').tipuesearch({
           'show': 10,
-          'descriptiveWords': 250
+          'descriptiveWords': 250,
+          'wholeWords': false
           });
         });
         </script>]]></xsl:text>
