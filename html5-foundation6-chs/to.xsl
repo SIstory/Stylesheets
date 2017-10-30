@@ -86,6 +86,9 @@
    <!-- head v drugem div je h3 itn. Glej še spodaj template stdheader -->
    <xsl:param name="divOffset">2</xsl:param>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc>Standardni footer je brez vsebine (po potrebi dodaj tukaj vsebino)</xsldoc:desc>
+   </xsldoc:doc>
    <xsl:template name="stdfooter"/>
    
    <xsl:param name="institution"></xsl:param>
@@ -110,6 +113,10 @@
       </desc>
    </doc>
    <xsl:variable name="myi18n" select="document('../myi18n.xml',document(''))"/>
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+      <xsldoc:param name="word"/>
+   </xsldoc:doc>
    <xsl:template name="myi18n">
       <xsl:param name="word"/>
       <xsl:variable name="Word">
@@ -133,6 +140,7 @@
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[html] Generate name for a chunk of output<param name="ident">ident</param>
       </desc>
+      <param name="ident"/>
    </doc>
    <xsl:template name="outputChunkName">
       <xsl:param name="ident"/>
@@ -154,6 +162,7 @@
    <!-- Vsak body mora nujno imeti div in tudi, če ima samo enega, naredi na podlagi njegovega xml:id nov html dokument -->
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>whether a div starts a new page</desc>
+      <param name="context"/>
    </doc>
    <xsl:function name="tei:keepDivOnPage" as="xs:boolean">
       <xsl:param name="context"/>
@@ -181,6 +190,9 @@
    </xsl:function>
    
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="headHook">
       <meta http-equiv="x-ua-compatible" content="ie=edge"/>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -195,6 +207,9 @@
    <xsl:param name="cssSecondaryFile">
       <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory.css')"/>
    </xsl:param>
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="cssHook">
       <xsl:if test="$title-bar-sticky = 'true'">
          <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory-sticky_title_bar.css')"/>
@@ -203,6 +218,9 @@
       <link href="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/css/normalize.css')}" rel="stylesheet" type="text/css" />
       <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}"  rel="stylesheet" type="text/css" />
    </xsl:template>
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="javascriptHook">
       <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/jquery.js')}"></script>
       <!-- za iskalnik tipue -->
@@ -229,6 +247,9 @@
       <!-- za back-to-top in highcharts je drugače potrebno dati jquery, vendar sedaj ne rabim dodajati jquery kodo,
          ker je že vsebovana zgoraj -->
    </xsl:template>
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="bodyEndHook">
       <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/what-input.js')}"></script>
       <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/foundation.min.js')}"></script>
@@ -237,7 +258,10 @@
       <script src="{concat($path-general,'publikacije/themes/js/plugin/back-to-top/back-to-top.js')}"></script>
    </xsl:template>
    
-   <!-- naredi index.html datoteko -->
+   
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc> naredi index.html datoteko </xsldoc:desc>
+   </xsldoc:doc>
    <xsl:template name="pageLayoutSimple">
       <!-- vključimo HTML5 deklaracijo -->
       <xsl:value-of select="$HTML5_declaracion" disable-output-escaping="yes"/>
@@ -309,7 +333,10 @@
    </xsl:template>
    
    
-   <!-- naredi strani z div -->
+   
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc>naredi strani z div</xsldoc:desc>
+   </xsldoc:doc>
    <xsl:template name="writeDiv">
       <xsl:variable name="BaseFile">
          <xsl:value-of select="$masterFile"/>
@@ -455,6 +482,10 @@
       </html>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+      <xsldoc:param name="title"/>
+   </xsldoc:doc>
    <xsl:template name="stdheader">
       <xsl:param name="title">(no title)</xsl:param>
       <xsl:choose>
@@ -531,6 +562,9 @@
       </xsl:choose>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template match="tei:*" mode="generateNextLink">
       <a class="button">
          <xsl:attribute name="href">
@@ -547,6 +581,9 @@
       </a>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template match="tei:*" mode="generatePreviousLink">
       <a class="button">
          <xsl:attribute name="href">
@@ -563,6 +600,9 @@
       </a>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="parentChapter">
       <a class="button">
          <xsl:attribute name="href">
@@ -637,6 +677,9 @@
       </xsl:choose>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template name="previousLink">
       <xsl:variable name="myName">
          <xsl:value-of select="local-name(.)"/>
@@ -688,6 +731,10 @@
       </xsl:choose>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+      <xsldoc:param name="chapterID"/>
+   </xsldoc:doc>
    <xsl:template name="sistoryPath">
       <xsl:param name="chapterID"/>
       <xsl:variable name="sistoryID">
@@ -700,6 +747,10 @@
       </xsl:if>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+      <xsldoc:param name="chapterID"/>
+   </xsldoc:doc>
    <xsl:template name="sistoryID">
       <xsl:param name="chapterID"/>
       <xsl:variable name="sistoryIDs">
@@ -727,6 +778,9 @@
       </xsl:for-each>
    </xsl:template>
    
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc/>
+   </xsldoc:doc>
    <xsl:template match="*" mode="generateLink">
       <xsl:variable name="ident">
          <xsl:apply-templates mode="ident" select="."/>
@@ -836,7 +890,10 @@
       <xsl:value-of select="$LINK"/>
    </xsl:template>
    
-   <!-- NASLOVNA STRAN -->
+   
+   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
+      <xsldoc:desc> NASLOVNA STRAN </xsldoc:desc>
+   </xsldoc:doc>
    <xsl:template match="tei:titlePage">
       <!-- avtor -->
       <p  class="naslovnicaAvtor">
