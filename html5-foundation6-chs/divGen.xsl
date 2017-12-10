@@ -32,7 +32,9 @@
                 <!-- začetek body -->
                 <body id="TOP">
                     <xsl:call-template name="bodyMicroData"/>
-                    <xsl:call-template name="bodyJavascriptHook"/>
+                    <xsl:call-template name="bodyJavascriptHook">
+                        <xsl:with-param name="thisLanguage"  select="@xml:lang"/>
+                    </xsl:call-template>
                     <xsl:call-template name="bodyHook"/>
                     <!-- začetek vsebine -->
                     <div class="column row">
@@ -44,9 +46,8 @@
                         </xsl:if>
                         <!-- vstavim svoj header -->
                         <xsl:call-template name="html-header">
-                            <xsl:with-param name="thisChapter-id">
-                                <xsl:value-of select="@xml:id"/>
-                            </xsl:with-param>
+                            <xsl:with-param name="thisChapter-id" select="@xml:id"/>
+                            <xsl:with-param name="thisLanguage" select="@xml:lang"/>
                         </xsl:call-template>
                         <!-- GLAVNA VSEBINA -->
                         <section>
@@ -54,6 +55,7 @@
                                 <div class="medium-2 columns show-for-medium">
                                     <xsl:call-template name="previous-divGen-Link">
                                         <xsl:with-param name="thisDivGenType" select="@type"/>
+                                        <xsl:with-param name="thisLanguage" select="@xml:lang"/>
                                     </xsl:call-template>
                                 </div>
                                 <div class="medium-8 small-12 columns">
@@ -66,6 +68,7 @@
                                 <div class="medium-2 columns show-for-medium text-right">
                                     <xsl:call-template name="next-divGen-Link">
                                         <xsl:with-param name="thisDivGenType" select="@type"/>
+                                        <xsl:with-param name="thisLanguage" select="@xml:lang"/>
                                     </xsl:call-template>
                                 </div>
                             </div>
@@ -73,11 +76,13 @@
                                 <div class="small-6 columns text-center">
                                     <xsl:call-template name="previous-divGen-Link">
                                         <xsl:with-param name="thisDivGenType" select="@type"/>
+                                        <xsl:with-param name="thisLanguage" select="@xml:lang"/>
                                     </xsl:call-template>
                                 </div>
                                 <div class="small-6 columns text-center">
                                     <xsl:call-template name="next-divGen-Link">
                                         <xsl:with-param name="thisDivGenType" select="@type"/>
+                                        <xsl:with-param name="thisLanguage" select="@xml:lang"/>
                                     </xsl:call-template>
                                 </div>
                             </div>
@@ -95,7 +100,9 @@
                             <xsl:call-template name="startHook"/>
                             <!-- VSTAVI VSEBINO divGen strani -->
                             <!-- zaradi lažjega nadzora nad procesiranjem divGen, jih procesiram preko ločenega call-template -->
-                            <xsl:call-template name="divGen-main-content"/>
+                            <xsl:call-template name="divGen-main-content">
+                                <xsl:with-param name="thisLanguage" select="@xml:lang"/>
+                            </xsl:call-template>
                             
                             <!--<xsl:call-template name="makeDivBody">
                                                 <xsl:with-param name="depth" select="count(ancestor::tei:div) + 1"/>
@@ -120,32 +127,35 @@
     
     <xsl:template name="previous-divGen-Link">
         <xsl:param name="thisDivGenType"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:variable name="sistoryPath">
             <xsl:if test="$chapterAsSIstoryPublications='true'">
                 <xsl:call-template name="sistoryPath">
-                    <xsl:with-param name="chapterID" select="preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id"/>
+                    <xsl:with-param name="chapterID" select="preceding-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/@xml:id"/>
                 </xsl:call-template>
             </xsl:if>
         </xsl:variable>
-        <xsl:if test="preceding-sibling::tei:divGen[@type = $thisDivGenType]">
-            <a class="button" href="{concat($sistoryPath,preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{preceding-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&lt;&lt;</a>
+        <xsl:if test="preceding-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType]">
+            <a class="button" href="{concat($sistoryPath,preceding-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{preceding-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/tei:head}">&lt;&lt;</a>
         </xsl:if>
     </xsl:template>
     <xsl:template name="next-divGen-Link">
         <xsl:param name="thisDivGenType"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:variable name="sistoryPath">
             <xsl:if test="$chapterAsSIstoryPublications='true'">
                 <xsl:call-template name="sistoryPath">
-                    <xsl:with-param name="chapterID" select="following-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id"/>
+                    <xsl:with-param name="chapterID" select="following-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/@xml:id"/>
                 </xsl:call-template>
             </xsl:if>
         </xsl:variable>
-        <xsl:if test="following-sibling::tei:divGen[@type = $thisDivGenType]">
-            <a class="button" href="{concat($sistoryPath,following-sibling::tei:divGen[@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{following-sibling::tei:divGen[@type = $thisDivGenType][1]/tei:head}">&gt;&gt;</a>
+        <xsl:if test="following-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType]">
+            <a class="button" href="{concat($sistoryPath,following-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/@xml:id,'.html')}" title="{following-sibling::tei:divGen[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][@type = $thisDivGenType][1]/tei:head}">&gt;&gt;</a>
         </xsl:if>
     </xsl:template>
     
     <xsl:template name="divGen-main-content">
+        <xsl:param name="thisLanguage"/>
         <!-- kolofon CIP -->
         <xsl:if test="self::tei:divGen[@type='cip']">
             <xsl:apply-templates select="ancestor::tei:TEI/tei:teiHeader/tei:fileDesc" mode="kolofon"/>
@@ -156,19 +166,34 @@
         </xsl:if>
         <!-- kazalo vsebine toc -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='toc'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='toc']">
-            <xsl:call-template name="mainTOC"/>
+            <xsl:choose>
+                <xsl:when test="$languages-locale='true'">
+                    <xsl:call-template name="mainTOC-my">
+                        <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="mainTOC"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
         <!-- kazalo slik -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='images'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='images']">
-            <xsl:call-template name="images"/>
+            <xsl:call-template name="images">
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- kazalo grafikonov -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='charts'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='charts']">
-            <xsl:call-template name="charts"/>
+            <xsl:call-template name="charts">
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- kazalo tabel -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='tables'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='tables']">
-            <xsl:call-template name="tables"/>
+            <xsl:call-template name="tables">
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+            </xsl:call-template>
         </xsl:if>
         <!-- kazalo vsebine toc, ki izpiše samo glavne naslove poglavij, skupaj z imeni avtorjev poglavij -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleAuthor'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleAuthor']">
@@ -177,6 +202,10 @@
         <!-- kazalo vsebine toc, ki izpiše samo naslove poglavij, kjer ima div atributa type in xml:id -->
         <xsl:if test="self::tei:divGen[@type='toc'][@xml:id='titleType'] | self::tei:divGen[@type='toc'][tokenize(@xml:id,'-')[last()]='titleType']">
             <xsl:call-template name="TOC-title-type"/>
+        </xsl:if>
+        <!-- prazen divGen, v katerem lahko naknadno poljubno procesiramo vsebino -->
+        <xsl:if test="self::tei:divGen[@type='content']">
+            <xsl:call-template name="divGen-process-content"/>
         </xsl:if>
         <!-- seznam (indeks) oseb -->
         <xsl:if test="self::tei:divGen[@type='index'][@xml:id='persons'] | self::tei:divGen[@type='index'][tokenize(@xml:id,'-')[last()]='persons']">
@@ -193,6 +222,46 @@
         <!-- iskalnik -->
         <xsl:if test="self::tei:divGen[@type='search']">
             <xsl:call-template name="search"/>
+        </xsl:if>
+    </xsl:template>
+    
+    <!-- Moja prilagoditev prevzetega procesiranja kazala glede na language-locale -->
+    <xsl:template name="mainTOC-my">
+        <xsl:param name="thisLanguage"/>
+        <xsl:if test="$tocFront">
+            <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front">
+                <xsl:call-template name="partTOC-my">
+                    <xsl:with-param name="part">front</xsl:with-param>
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
+            </xsl:for-each>
+        </xsl:if>
+        <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:body">
+            <xsl:call-template name="partTOC-my">
+                <xsl:with-param name="part">body</xsl:with-param>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+            </xsl:call-template>
+        </xsl:for-each>
+        <xsl:if test="$tocBack">
+            <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back">
+                <xsl:call-template name="partTOC-my">
+                    <xsl:with-param name="part">back</xsl:with-param>
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
+            </xsl:for-each>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template name="partTOC-my">
+        <xsl:param name="part"/>
+        <xsl:param name="force"/>
+        <xsl:param name="thisLanguage"/>
+        <xsl:if test="tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
+            <ul class="toc{$force} toc_{$part}">
+                <xsl:apply-templates mode="maketoc"
+                    select="tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
+                    <xsl:with-param name="forcedepth" select="$force"/>
+                </xsl:apply-templates>
+            </ul>
         </xsl:if>
     </xsl:template>
     
@@ -575,9 +644,10 @@
     
     <!-- KAZALO SLIK -->
     <xsl:template name="images">
+        <xsl:param name="thisLanguage"/>
         <!-- izpiše vse slike -->
         <ul class="circel">
-            <xsl:for-each select="//tei:figure[not(@type='chart')]">
+            <xsl:for-each select="//tei:figure[if ($languages-locale='true') then ancestor::tei:div[@xml:id][@xml:lang=$thisLanguage] else @xml:id][tei:graphic][not(@type='chart')]">
                 <xsl:variable name="figure-id" select="@xml:id"/>
                 <xsl:variable name="image-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
                 <xsl:variable name="sistoryPath">
@@ -598,9 +668,10 @@
     
     <!-- KAZALO GRAFIKONOV -->
     <xsl:template name="charts">
-        <!-- izpiše vse slike -->
+        <xsl:param name="thisLanguage"/>
+        <!-- izpiše vse grafikone -->
         <ul class="circel">
-            <xsl:for-each select="//tei:figure[@type='chart']">
+            <xsl:for-each select="//tei:figure[if ($languages-locale='true') then ancestor::tei:div[@xml:id][@xml:lang=$thisLanguage] else @xml:id][tei:graphic][@type='chart']">
                 <xsl:variable name="figure-id" select="@xml:id"/>
                 <xsl:variable name="image-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
                 <xsl:variable name="sistoryPath">
@@ -621,9 +692,10 @@
     
     <!-- KAZALO TABEL -->
     <xsl:template name="tables">
+        <xsl:param name="thisLanguage"/>
         <!-- izpiše vse tabele, ki imajo naslov (s tem filtriramo tiste tabele, ki so v okviru grafikonov) -->
         <ul class="circel">
-            <xsl:for-each select="//tei:table[tei:head]">
+            <xsl:for-each select="//tei:table[if ($languages-locale='true') then ancestor::tei:div[@xml:id][@xml:lang=$thisLanguage] else @xml:id][tei:head]">
                 <xsl:variable name="table-id" select="@xml:id"/>
                 <xsl:variable name="table-chapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>
                 <xsl:variable name="sistoryPath">
@@ -642,7 +714,12 @@
         </ul><!-- konec procesiranja slik -->
     </xsl:template>
     
-    <!-- SEZNAM (INDEKS) OSEB -->
+    <!-- poljubno naknadno procesiranje vsebine -->
+    <xsl:template name="divGen-process-content">
+        <!-- v privzetih XSLT stilih ne procesira vsebine - se naredi naknadno glede na potrebe posamezne pretvobe -->
+    </xsl:template>
+    
+    <!-- SEZNAM (INDEKS) OSEB; TODO za večjezičnost-locale -->
     <xsl:template name="persons">
         <ul class="no-bullet">
             <xsl:variable name="rules"><![CDATA[< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9 < Ä=A,ä=á=ă=a < B,b < C,c < Č=Ć,č=ć < D,d < Đ,đ < E,é=e < F,f < G,g < H,h < I,í=i < J,j < K,k < Ł=L,l < M,m < N,ň=n < Ö=O,ö=ő=ó=o < P,p < Q,q < R,r=ř < ß=SS,ß=ss < S,s < Š,š < T,t < Ü=U,ü=u < V,v < W,w < X,x < Y,y < Z,z < Ž,ž]]></xsl:variable>
@@ -840,7 +917,7 @@
         </ul>
     </xsl:template>
     
-    <!-- SEZNAM (INDEKS) KRAJEV -->
+    <!-- SEZNAM (INDEKS) KRAJEV; TODO za večjezičnost-locale -->
     <xsl:template name="places">
         <ul class="no-bullet">
             <xsl:variable name="rules"><![CDATA[< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9 < Ä=A,ä=á=ă=a < B,b < C,c < Č=Ć,č=ć < D,d < Đ,đ < E,é=e < F,f < G,g < H,h < I,í=i < J,j < K,k < Ł=L,l < M,m < N,ň=n < Ö=O,ö=ő=ó=o < P,p < Q,q < R,r=ř < ß=SS,ß=ss < S,s < Š,š < T,t < Ü=U,ü=u < V,v < W,w < X,x < Y,y < Z,z < Ž,ž]]></xsl:variable>
@@ -969,7 +1046,7 @@
         </ul>
     </xsl:template>
     
-    <!-- SEZNAM (INDEKS) ORGANIZACIJ -->
+    <!-- SEZNAM (INDEKS) ORGANIZACIJ; TODO za večjezičnost-locale -->
     <xsl:template name="organizations">
         <ul class="no-bullet">
             <xsl:variable name="rules"><![CDATA[< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9 < Ä=A,ä=á=ă=a < B,b < C,c < Č=Ć,č=ć < D,d < Đ,đ < E,é=e < F,f < G,g < H,h < I,í=i < J,j < K,k < Ł=L,l < M,m < N,ň=n < Ö=O,ö=ő=ó=o < P,p < Q,q < R,r=ř < ß=SS,ß=ss < S,s < Š,š < T,t < Ü=U,ü=u < V,v < W,w < X,x < Y,y < Z,z < Ž,ž]]></xsl:variable>
@@ -1024,52 +1101,24 @@
         </xsl:variable>
         <div id="tipue_search_content">
             <xsl:text> </xsl:text>
-            <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
-            <xsl:result-document href="{$datoteka-js}" method="text" encoding="UTF-8">
-                <!-- ZAČETEK JavaScript dokumenta -->
-                <xsl:text>var tipuesearch = {"pages": [
-                                    </xsl:text>
-                <!-- Shrani celotno besedilo v indeks za:
-                     - vse child elemente od div, ki imajo @xml:id;
-                     - vse child elemente od izbranih list elementov:
-                         - list element ne sme imeti @xml:id,
-                         - child element mora imeti @xml:id
-                -->
-                <xsl:for-each select="//node()[ancestor::tei:TEI/@xml:id = $tei-id][@xml:id][ancestor::tei:text][parent::tei:div][not(self::tei:div)] |
-                    //tei:listPerson[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
-                     //tei:listPlace[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
-                       //tei:listOrg[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
-                     //tei:listEvent[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
-                      //tei:listBibl[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
-                          //tei:list[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id]">
-                    <!--<xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>-->
-                    <xsl:variable name="generatedLink">
-                        <xsl:apply-templates mode="generateLink" select="."/>
-                    </xsl:variable>
-                    <xsl:variable name="besedilo">
-                        <xsl:apply-templates mode="besedilo"/>
-                    </xsl:variable>
-                    <xsl:text>{ "title": "</xsl:text>
-                    <xsl:value-of select="normalize-space(translate(translate(parent::tei:div/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
-                    <!--<xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>-->
-                    <xsl:text>", "text": "</xsl:text>
-                    <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;&#92;','&#x20;'))"/>
-                    <xsl:text>", "tags": "</xsl:text>
-                    <xsl:text>", "url": "</xsl:text>
-                    <xsl:value-of select="concat($sistoryAbsolutePath,$generatedLink)"/>
-                    <!--<xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>-->
-                    <xsl:text>" }</xsl:text>
-                    <xsl:if test="position() != last()">
-                        <xsl:text>,</xsl:text>
+            <!-- generiram tipuesearch_content.js -->
+            <xsl:choose>
+                <xsl:when test="$languages-locale='true'">
+                    <!--  tipuesearch_content.js naredim samo enkrat (pri divGen s privzetim jezikom jezikom) -->
+                    <xsl:if test="self::tei:divGen[@xml:lang=$languages-locale-primary]">
+                        <xsl:call-template name="tipuesearch_content">
+                            <xsl:with-param name="tei-id" select="$tei-id"/>
+                            <xsl:with-param name="sistoryAbsolutePath" select="$sistoryAbsolutePath"/>
+                        </xsl:call-template>
                     </xsl:if>
-                    <xsl:text>&#xA;</xsl:text>
-                </xsl:for-each>
-                
-                <!-- KONEC JavaScript dokumenta -->
-                <xsl:text>
-                     ]};
-                </xsl:text>
-            </xsl:result-document>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="tipuesearch_content">
+                        <xsl:with-param name="tei-id" select="$tei-id"/>
+                        <xsl:with-param name="sistoryAbsolutePath" select="$sistoryAbsolutePath"/>
+                    </xsl:call-template>
+                </xsl:otherwise>
+            </xsl:choose>
         </div>
         
         <!-- JavaScript, s katerim se požene iskanje -->
@@ -1084,12 +1133,64 @@
         </script>]]></xsl:text>
     </xsl:template>
     
+    <xsl:template name="tipuesearch_content">
+        <xsl:param name="tei-id"/>
+        <xsl:param name="sistoryAbsolutePath"/>
+        <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
+        <xsl:result-document href="{$datoteka-js}" method="text" encoding="UTF-8">
+            <!-- ZAČETEK JavaScript dokumenta -->
+            <xsl:text>var tipuesearch = {"pages": [
+                                    </xsl:text>
+            <!-- Shrani celotno besedilo v indeks za:
+                     - vse child elemente od div, ki imajo @xml:id;
+                     - vse child elemente od izbranih list elementov:
+                         - list element ne sme imeti @xml:id,
+                         - child element mora imeti @xml:id
+                -->
+            <xsl:for-each select="//node()[ancestor::tei:TEI/@xml:id = $tei-id][@xml:id][ancestor::tei:text][parent::tei:div][not(self::tei:div)] |
+                //tei:listPerson[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
+                //tei:listPlace[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
+                //tei:listOrg[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
+                //tei:listEvent[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
+                //tei:listBibl[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id] |
+                //tei:list[ancestor::tei:TEI/@xml:id = $tei-id][not(@xml:id)][ancestor::tei:text][parent::tei:div]/node()[@xml:id]">
+                <!--<xsl:variable name="ancestorChapter-id" select="ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/@xml:id"/>-->
+                <xsl:variable name="generatedLink">
+                    <xsl:apply-templates mode="generateLink" select="."/>
+                </xsl:variable>
+                <xsl:variable name="besedilo">
+                    <xsl:apply-templates mode="besedilo"/>
+                </xsl:variable>
+                <xsl:text>{ "title": "</xsl:text>
+                <xsl:value-of select="normalize-space(translate(translate(parent::tei:div/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
+                <!--<xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>-->
+                <xsl:text>", "text": "</xsl:text>
+                <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;&#92;','&#x20;'))"/>
+                <xsl:text>", "tags": "</xsl:text>
+                <xsl:text>", "url": "</xsl:text>
+                <xsl:value-of select="concat($sistoryAbsolutePath,$generatedLink)"/>
+                <!--<xsl:value-of select="concat($ancestorChapter-id,'.html#',@xml:id)"/>-->
+                <xsl:text>" }</xsl:text>
+                <xsl:if test="position() != last()">
+                    <xsl:text>,</xsl:text>
+                </xsl:if>
+                <xsl:text>&#xA;</xsl:text>
+            </xsl:for-each>
+            
+            <!-- KONEC JavaScript dokumenta -->
+            <xsl:text>
+                     ]};
+                </xsl:text>
+        </xsl:result-document>
+    </xsl:template>
+    
     <xsl:template match="node()" mode="besedilo" xml:space="preserve">
         <xsl:copy>
             <xsl:apply-templates select="node()" mode="besedilo"/>
         </xsl:copy>
     </xsl:template>
     
+    <!-- TODO za večjezičnost-locale -->
     <xsl:template name="TOC-title-author">
         <xsl:if test="//tei:front">
             <ul class="toc toc_front">
@@ -1112,6 +1213,7 @@
         </xsl:if>
     </xsl:template>
     
+    <!-- TODO za večjezičnost-locale -->
     <xsl:template name="TOC-title-author-li">
         <li class="toc">
             <a>
@@ -1138,6 +1240,7 @@
         </li>
     </xsl:template>
     
+    <!-- TODO za večjezičnost-locale -->
     <xsl:template name="TOC-title-type">
         <xsl:if test="//tei:front/tei:div[@type][@xml:id] | //tei:front/tei:divGen">
             <ul class="toc toc_front">
@@ -1160,6 +1263,7 @@
         </xsl:if>
     </xsl:template>
     
+    <!-- TODO za večjezičnost-locale -->
     <xsl:template name="TOC-title-type-li">
         <li class="toc">
             <a>

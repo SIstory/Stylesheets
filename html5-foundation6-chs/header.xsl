@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:tei="http://www.tei-c.org/ns/1.0"
+<xsl:stylesheet 
     xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
     exclude-result-prefixes="tei" 
     version="2.0">
     
@@ -57,6 +59,7 @@
     
     <xsl:template name="html-header">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <header>
             <div class="hide-for-large">
                 <xsl:if test="$title-bar-sticky = 'true'">
@@ -73,7 +76,17 @@
                     <div class="title-bar" data-responsive-toggle="publication-menu" data-hide-for="large">
                         <button class="menu-icon" type="button" data-toggle=""></button>
                         <div class="title-bar-title">
-                            <xsl:sequence select="tei:i18n('Menu')"/>
+                            <xsl:choose>
+                                <xsl:when test="$languages-locale='true'">
+                                    <xsl:call-template name="myi18n-lang">
+                                        <xsl:with-param name="word">Menu</xsl:with-param>
+                                        <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                    </xsl:call-template>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:sequence select="tei:i18n('Menu')"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </div>
                         <div class="title-bar-right">
                             <a class="title-bar-title">
@@ -86,6 +99,7 @@
                                 <xsl:call-template name="title-bar-list-of-contents">
                                     <xsl:with-param name="title-bar-type">vertical</xsl:with-param>
                                     <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                                 </xsl:call-template>
                             </ul>
                         </div>
@@ -135,6 +149,7 @@
                             <xsl:call-template name="title-bar-list-of-contents">
                                 <xsl:with-param name="title-bar-type">dropdown</xsl:with-param>
                                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                             </xsl:call-template>
                         </ul>
                     </div>
@@ -143,29 +158,60 @@
             
             <!-- iskalnik -->
             <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']">
-                <xsl:variable name="sistoryPath-search">
-                    <xsl:if test="$chapterAsSIstoryPublications='true'">
-                        <xsl:call-template name="sistoryPath">
-                            <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']/@xml:id"/>
-                        </xsl:call-template>
-                    </xsl:if>
-                </xsl:variable>
-                <form action="{concat($sistoryPath-search,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']/@xml:id,'.html')}">
-                    <div class="row collapse">
-                        <div class="small-10 large-11 columns">
-                            <input type="text" name="q" id="tipue_search_input" placeholder="{tei:i18n('Search placeholder')}"/>
-                        </div>
-                        <div class="small-2 large-1 columns">
-                            <img type="button" class="tipue_search_button"/>
-                        </div>
-                    </div>
-                </form>
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:variable name="sistoryPath-search">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search'][@xml:lang=$thisLanguage]/@xml:id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <form action="{concat($sistoryPath-search,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search'][@xml:lang=$thisLanguage]/@xml:id,'.html')}">
+                            <div class="row collapse">
+                                <div class="small-10 large-11 columns">
+                                    <input type="text" name="q" id="tipue_search_input">
+                                        <xsl:attribute name="placeholder">
+                                            <xsl:call-template name="myi18n-lang">
+                                                <xsl:with-param name="word">Search placeholder</xsl:with-param>
+                                                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                            </xsl:call-template>
+                                        </xsl:attribute>
+                                    </input>
+                                </div>
+                                <div class="small-2 large-1 columns">
+                                    <img type="button" class="tipue_search_button"/>
+                                </div>
+                            </div>
+                        </form>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="sistoryPath-search">
+                            <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                <xsl:call-template name="sistoryPath">
+                                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']/@xml:id"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:variable>
+                        <form action="{concat($sistoryPath-search,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='search']/@xml:id,'.html')}">
+                            <div class="row collapse">
+                                <div class="small-10 large-11 columns">
+                                    <input type="text" name="q" id="tipue_search_input" placeholder="{tei:i18n('Search placeholder')}"/>
+                                </div>
+                                <div class="small-2 large-1 columns">
+                                    <img type="button" class="tipue_search_button"/>
+                                </div>
+                            </div>
+                        </form>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
         </header>
     </xsl:template>
     
     <xsl:template name="title-bar-list-of-contents">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:variable name="sistoryParentPath">
             <xsl:choose>
@@ -191,7 +237,16 @@
         <!-- Poiščemo vse možne dele publikacije -->
         <!-- Naslovnica - index.html je vedno, kadar ni procesirano iz teiCorpus in ima hkrati TEI svoj xml:id -->
         <li>
-            <xsl:if test="$thisChapter-id = 'index'">
+            <!-- večjezično poimenovanje index html datotek -->
+            <xsl:variable name="index-html">
+                <xsl:choose>
+                    <xsl:when test="$thisLanguage != $languages-locale-primary">
+                        <xsl:value-of select="concat('index','-',$thisLanguage)"/>
+                    </xsl:when>
+                    <xsl:otherwise>index</xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="$thisChapter-id = $index-html">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:if>
             <a>
@@ -201,16 +256,36 @@
                             <xsl:value-of select="concat($sistoryParentPath,ancestor-or-self::tei:TEI/@xml:id,'.html')"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="concat($sistoryParentPath,'index.html')"/>
+                            <xsl:value-of select="concat($sistoryParentPath,$index-html,'.html')"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
                 <xsl:choose>
                     <xsl:when test="tei:text[@type = 'article'] or ancestor::tei:text[@type = 'article'] or self::tei:teiCorpus/tei:TEI/tei:text[@type = 'article']">
-                        <xsl:sequence select="tei:i18n('Naslov')"/>
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Naslov</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Naslov')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="tei:i18n('Naslovnica')"/>
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Naslovnica</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Naslovnica')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
             </a>
@@ -219,11 +294,12 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']">
             <xsl:call-template name="header-cip">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
         </xsl:if>
-        <!-- kolofon CIP za teiCorpus za revije -->
+        <!-- kolofon CIP za teiCorpus za revije: TODO za večjezičnost-locale -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-cip='true'">
             <li>
                 <xsl:if test="$thisChapter-id='cip'">
@@ -245,11 +321,12 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']">
             <xsl:call-template name="header-teiHeader">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
         </xsl:if>
-        <!-- TEI kolofon za teiCorpus za revije -->
+        <!-- TEI kolofon za teiCorpus za revije: TODO za večjezičnost-locale -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-teiHeader='true'">
             <li>
                 <xsl:if test="$thisChapter-id='teiHeader'">
@@ -267,7 +344,7 @@
                 </a>
             </li>
         </xsl:if>
-        <!-- kazalo toc titleAuthor za teiCorpus za revije (predpogoj: tei:text mora imeti @n) -->
+        <!-- kazalo toc titleAuthor za teiCorpus za revije (predpogoj: tei:text mora imeti @n): TODO za večjezičnost-locale -->
         <xsl:if test="self::tei:teiCorpus and $write-teiCorpus-toc_titleAuthor='true'">
             <li>
                 <xsl:if test="$thisChapter-id='tocJournal'">
@@ -289,6 +366,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']">
             <xsl:call-template name="header-toc">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -297,6 +375,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div">
             <xsl:call-template name="header-front">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -305,6 +384,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div">
             <xsl:call-template name="header-body">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -313,6 +393,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr']">
             <xsl:call-template name="header-bibliogr">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -321,6 +402,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']">
             <xsl:call-template name="header-appendix">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -329,6 +411,7 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']">
             <xsl:call-template name="header-summary">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
             </xsl:call-template>
@@ -337,20 +420,29 @@
         <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']">
             <xsl:call-template name="header-back-index">
                 <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
                 <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                 <xsl:with-param name="sistoryParentPath" select="$sistoryParentPath"/>
+            </xsl:call-template>
+        </xsl:if>
+        <!-- languages - locale -->
+        <xsl:if test="$languages-locale='true'">
+            <xsl:call-template name="header-locale">
+                <xsl:with-param name="thisChapter-id" select="$thisChapter-id"/>
+                <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
     
     <xsl:template name="header-cip">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <xsl:variable name="sistoryPath-cip">
             <xsl:if test="$chapterAsSIstoryPublications='true'">
                 <xsl:call-template name="sistoryPath">
-                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id"/>
+                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]/@xml:id"/>
                 </xsl:call-template>
             </xsl:if>
         </xsl:variable>
@@ -358,20 +450,21 @@
             <xsl:if test=".[@type='cip']">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:if>
-            <a href="{concat($sistoryPath-cip,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/@xml:id,'.html')}">
-                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip']/tei:head[1]"/>
+            <a href="{concat($sistoryPath-cip,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]/@xml:id,'.html')}">
+                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='cip'][if ($languages-locale='true') then @xml:lang=$thisLanguage else tei:head]/tei:head[1]"/>
             </a>
         </li>
     </xsl:template>
     
     <xsl:template name="header-teiHeader">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <xsl:variable name="sistoryPath-teiHeader">
             <xsl:if test="$chapterAsSIstoryPublications='true'">
                 <xsl:call-template name="sistoryPath">
-                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id"/>
+                    <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]/@xml:id"/>
                 </xsl:call-template>
             </xsl:if>
         </xsl:variable>
@@ -379,14 +472,15 @@
             <xsl:if test=".[@type='teiHeader']">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:if>
-            <a href="{concat($sistoryPath-teiHeader,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/@xml:id,'.html')}">
-                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader']/tei:head[1]"/>
+            <a href="{concat($sistoryPath-teiHeader,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]/@xml:id,'.html')}">
+                <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='teiHeader'][if ($languages-locale='true') then @xml:lang=$thisLanguage else tei:head]/tei:head[1]"/>
             </a>
         </li>
     </xsl:template>
     
     <xsl:template name="header-toc">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -397,19 +491,21 @@
             <xsl:variable name="sistoryPath-toc1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-toc1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-toc-head"/>
+            <a href="{concat($sistoryPath-toc1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-toc-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-toc">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -442,6 +538,7 @@
     
     <xsl:template name="header-front">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -452,19 +549,21 @@
             <xsl:variable name="sistoryPath-front1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-front1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-front-head"/>
+            <a href="{concat($sistoryPath-front1,ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-front-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-front">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -503,29 +602,32 @@
     
     <xsl:template name="header-body">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
-            <xsl:if test=".[ancestor::tei:body][self::tei:div]">
+            <xsl:if test=".[ancestor::tei:body and self::tei:div][tokenize($thisChapter-id,'-')[1] != 'index']">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:if>
             <!-- povezava na prvi body/div -->
             <xsl:variable name="sistoryPath-body1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-body1,ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-body-head"/>
+            <a href="{concat($sistoryPath-body1,ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-body-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <!--<xsl:variable name="chapters-id" select="@xml:id"/>-->
                         <li>
                             <xsl:if test="descendant-or-self::tei:div[@xml:id = $thisChapter-id]">
@@ -550,6 +652,7 @@
     
     <xsl:template name="header-bibliogr">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -560,19 +663,29 @@
             <xsl:variable name="sistoryPath-bibliogr1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-bibliogr1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][1]/@xml:id,'.html')}">
-                <xsl:sequence select="tei:i18n('Bibliografija')"/>
+            <a href="{concat($sistoryPath-bibliogr1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Bibliografija</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Bibliografija')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr']">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-bibliogr">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -611,6 +724,7 @@
     
     <xsl:template name="header-appendix">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -621,19 +735,21 @@
             <xsl:variable name="sistoryPath-appendix1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-appendix1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-appendix-head"/>
+            <a href="{concat($sistoryPath-appendix1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-appendix-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-appendix">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -672,6 +788,7 @@
     
     <xsl:template name="header-summary">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -682,19 +799,21 @@
             <xsl:variable name="sistoryPath-summary1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-summary1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-summary-head"/>
+            <a href="{concat($sistoryPath-summary1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-summary-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-summary">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -733,6 +852,7 @@
     
     <xsl:template name="header-back-index">
         <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
         <xsl:param name="title-bar-type"/>
         <xsl:param name="sistoryParentPath"/>
         <li>
@@ -743,19 +863,21 @@
             <xsl:variable name="sistoryPath-index1">
                 <xsl:if test="$chapterAsSIstoryPublications='true'">
                     <xsl:call-template name="sistoryPath">
-                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id"/>
+                        <xsl:with-param name="chapterID" select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:variable>
-            <a href="{concat($sistoryPath-index1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][1]/@xml:id,'.html')}">
-                <xsl:call-template name="nav-index-head"/>
+            <a href="{concat($sistoryPath-index1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
+                <xsl:call-template name="nav-index-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
-            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][2]">
+            <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
                     <xsl:call-template name="attribute-title-bar-type">
                         <xsl:with-param name="title-bar-type" select="$title-bar-type"/>
                     </xsl:call-template>
-                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']">
+                    <xsl:for-each select="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
                         <xsl:variable name="chapters-id" select="@xml:id"/>
                         <xsl:variable name="sistoryPath-index">
                             <xsl:if test="$chapterAsSIstoryPublications='true'">
@@ -786,11 +908,80 @@
         </li>
     </xsl:template>
     
+    <xsl:template name="header-locale">
+        <xsl:param name="thisChapter-id"/>
+        <xsl:param name="thisLanguage"/>
+        <li>
+            <a href="#">
+                <xsl:call-template name="myi18n-lang">
+                    <xsl:with-param name="word">Locale</xsl:with-param>
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
+            </a>
+            <ul class="menu">
+                <xsl:variable name="otherGroupLanguage">
+                    <xsl:for-each-group select="//tei:div[@xml:id][@xml:lang != $thisLanguage]" group-by="@xml:lang">
+                        <lang>
+                            <xsl:value-of select="current-grouping-key()"/>
+                        </lang>
+                    </xsl:for-each-group>
+                </xsl:variable>
+                <xsl:for-each-group select="//tei:div[@xml:id][@xml:lang != $thisLanguage]" group-by="@xml:lang">
+                    <xsl:variable name="thisGroupLanguage" select="current-grouping-key()"/>
+                    <li>
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:variable name="language-corresp">
+                                    <xsl:for-each select="//tei:*[@xml:id=$thisChapter-id]">
+                                        <xsl:for-each select="tokenize(@corresp,' ')">
+                                            <to>
+                                                <xsl:value-of select="substring-after(.,'#')"/>
+                                            </to>
+                                        </xsl:for-each>
+                                    </xsl:for-each>
+                                </xsl:variable>
+                                <xsl:variable name="correspChapterId">
+                                    <xsl:choose>
+                                        <xsl:when test="tokenize($thisChapter-id,'-')[1] = 'index'">
+                                            <xsl:choose>
+                                                <xsl:when test="$languages-locale-primary=$thisGroupLanguage">index</xsl:when>
+                                                <xsl:otherwise>
+                                                    <xsl:value-of select="concat('index','-',$thisGroupLanguage)"/>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:for-each select="//tei:*[@xml:id=$language-corresp/html:to][@xml:lang=$thisGroupLanguage]">
+                                                <xsl:value-of select="@xml:id"/>
+                                            </xsl:for-each>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:variable>
+                                <xsl:variable name="sistoryPath">
+                                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                        <xsl:call-template name="sistoryPath">
+                                            <xsl:with-param name="chapterID" select="$correspChapterId"/>
+                                        </xsl:call-template>
+                                    </xsl:if>
+                                </xsl:variable>
+                                <xsl:value-of select="concat($sistoryPath,$correspChapterId,'.html')"/>
+                            </xsl:attribute>
+                            <xsl:call-template name="myi18n-lang">
+                                <xsl:with-param name="word">Locale</xsl:with-param>
+                                <xsl:with-param name="thisLanguage" select="current-grouping-key()"/>
+                            </xsl:call-template>
+                        </a>
+                    </li>
+                </xsl:for-each-group>
+            </ul>
+        </li>
+    </xsl:template>
+    
     <xsl:template match="tei:head" mode="chapters-head">
         <xsl:apply-templates mode="chapters-head"/>
     </xsl:template>
     <xsl:template match="tei:note" mode="chapters-head">
-        <!-- ne procesimar -->
+        <!-- ne procesirmar -->
     </xsl:template>
     
     <xsl:template name="attribute-title-bar-type">
@@ -837,59 +1028,182 @@
     
     <!-- izpis imena, glede na število kazal: so lahko v tei:front -->
     <xsl:template name="nav-toc-head">
+        <xsl:param name="thisLanguage"/>
         <xsl:choose>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']) = 1">
-                <xsl:sequence select="tei:i18n('Kazalo')"/>
-            </xsl:when>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc']) = 2">
-                <xsl:sequence select="tei:i18n('Kazali')"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="tei:i18n('Kazala')"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    <!-- izpis imena, glede na število indeksov (krajevnih, osebnih, organizacij): so lahko v tei:back -->
-    <xsl:template name="nav-index-head">
-        <xsl:choose>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']) = 1">
-                <xsl:sequence select="tei:i18n('Indeks')"/>
-            </xsl:when>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index']) = 2">
-                <xsl:sequence select="tei:i18n('Indeksa')"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="tei:i18n('Indeksi')"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    <!-- izpis imena, glede na število front/div -->
-    <xsl:template name="nav-front-head">
-        <xsl:choose>
-            <!-- če je article, je lahko samo abstract -->
-            <xsl:when test="ancestor-or-self::tei:TEI/tei:text[@type='article']">
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
                 <xsl:choose>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div) = 1">
-                        <xsl:sequence select="tei:i18n('Izvleček')"/>
-                    </xsl:when>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div) = 2">
-                        <xsl:sequence select="tei:i18n('Izvlečka')"/>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Kazalo</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="tei:i18n('Izvlečki')"/>
+                        <xsl:sequence select="tei:i18n('Kazalo')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:divGen[@type='toc'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Kazali</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Kazali')"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div) = 1">
-                        <xsl:sequence select="tei:i18n('Uvod')"/>
-                    </xsl:when>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div) = 2">
-                        <xsl:sequence select="tei:i18n('Uvoda')"/>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Kazala</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="tei:i18n('Uvodi')"/>
+                        <xsl:sequence select="tei:i18n('Kazala')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- izpis imena, glede na število indeksov (krajevnih, osebnih, organizacij): so lahko v tei:back -->
+    <xsl:template name="nav-index-head">
+        <xsl:param name="thisLanguage"/>
+        <xsl:choose>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Indeks</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Indeks')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:divGen[@type='index'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Indeksa</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Indeksa')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Indeksi</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Indeksi')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- izpis imena, glede na število front/div -->
+    <xsl:template name="nav-front-head">
+        <xsl:param name="thisLanguage"/>
+        <xsl:choose>
+            <!-- če je article, je lahko samo abstract -->
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:text[@type='article'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
+                <xsl:choose>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Izvleček</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Izvleček')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Izvlečka</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Izvlečka')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Izvlečki</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Izvlečki')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Uvod</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Uvod')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:front/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Uvoda</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Uvoda')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Uvodi</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Uvodi')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
@@ -897,55 +1211,168 @@
     </xsl:template>
     <!-- izpis imena, glede na število body/div -->
     <xsl:template name="nav-body-head">
+        <xsl:param name="thisLanguage"/>
         <xsl:choose>
-            <xsl:when test="ancestor-or-self::tei:TEI/tei:text[@type='article']">
-                <xsl:sequence select="tei:i18n('Besedilo članka')"/>
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:text[@type='article'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Besedilo članka</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Besedilo članka')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
-            <xsl:when test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='part']">
-                <xsl:sequence select="tei:i18n('Besedilo')"/>
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='part'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Besedilo</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Besedilo')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:choose>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div) = 1">
-                        <xsl:sequence select="tei:i18n('Poglavje')"/>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Poglavje</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Poglavje')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
-                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div) = 2">
-                        <xsl:sequence select="tei:i18n('Poglavji')"/>
+                    <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Poglavji</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Poglavji')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="tei:i18n('Poglavja')"/>
+                        <xsl:choose>
+                            <xsl:when test="$languages-locale='true'">
+                                <xsl:call-template name="myi18n-lang">
+                                    <xsl:with-param name="word">Poglavja</xsl:with-param>
+                                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="tei:i18n('Poglavja')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis imena, glede na število back/div -->
+    <!-- izpis prilog, glede na število back/div -->
     <xsl:template name="nav-appendix-head">
+        <xsl:param name="thisLanguage"/>
         <xsl:choose>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']) = 1">
-                <xsl:sequence select="tei:i18n('Priloga')"/>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Priloga</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Priloga')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix']) = 2">
-                <xsl:sequence select="tei:i18n('Prilogi')"/>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='appendix'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Prilogi</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Prilogi')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:sequence select="tei:i18n('Priloge')"/>
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Priloge</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Priloge')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis imena, glede na število back/div -->
+    <!-- izpis povzetkov, glede na število back/div -->
     <xsl:template name="nav-summary-head">
+        <xsl:param name="thisLanguage"/>
         <xsl:choose>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']) = 1">
-                <xsl:sequence select="tei:i18n('Povzetek')"/>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 1">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Povzetek</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Povzetek')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
-            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary']) = 2">
-                <xsl:sequence select="tei:i18n('Povzetka')"/>
+            <xsl:when test="count(ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='summary'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id]) = 2">
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Povzetka</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Povzetka')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:sequence select="tei:i18n('Povzetki')"/>
+                <xsl:choose>
+                    <xsl:when test="$languages-locale='true'">
+                        <xsl:call-template name="myi18n-lang">
+                            <xsl:with-param name="word">Povzetki</xsl:with-param>
+                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="tei:i18n('Povzetki')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

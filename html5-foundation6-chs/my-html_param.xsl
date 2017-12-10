@@ -17,6 +17,13 @@
     <!-- If you want to have sticky title nav bar: true  -->
     <xsl:param name="title-bar-sticky">true</xsl:param>
     
+    <!-- parametri za locale (večjezično navigacijo po skupinah HTML dokumentov s skupnim jezikom) -->
+    <!-- če hočemo locale, mora biti vrednost spodnjega parametra true (prevzeto false) -->
+    <xsl:param name="languages-locale">false</xsl:param>
+    <!-- Določimo izhodiščni jezik za index.html (privzeto slovenščina sl).
+         Za ostale jezike se nato procesira index-jezikovna_koda.html, npr. index-en.html za angleščino. -->
+    <xsl:param name="languages-locale-primary">sl</xsl:param>
+    
     <!-- za divGen[@type='teiHeader']: če je $element-gloss-teiHeader true,
         se izpišejo gloss imena za elemente, drugače je name() elementa -->
     <xsl:param name="element-gloss-teiHeader">true</xsl:param>
