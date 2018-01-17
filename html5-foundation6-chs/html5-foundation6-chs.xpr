@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="18.1">
+<project version="19.1">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="18.1" xml:space="preserve">
+            <serialized version="19.1" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
                         <String>enable.project.master.files.support</String>
@@ -28,6 +28,7 @@
         </file>
         <file name="new-html_corpus.xsl"/>
         <file name="new-html_figures.xsl"/>
+        <file name="titlePage.xsl"/>
         <file name="to.xsl"/>
     </projectTree>
 </project>
