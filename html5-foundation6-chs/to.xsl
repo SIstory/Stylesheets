@@ -18,6 +18,7 @@
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/microdata.xsl -->
    <xsl:import href="../../Stylesheets-master/html5/microdata.xsl"/>
    <xsl:import href="my-html_param.xsl"/>
+   <xsl:import href="myi18n.xsl"/>
    
    <xsl:import href="new-html_figures.xsl"/>
    <xsl:import href="new-html_core.xsl"/>
@@ -25,6 +26,7 @@
    
    <xsl:import href="titlePage.xsl"/>
    <xsl:import href="header.xsl"/>
+   <xsl:import href="divGen-common.xsl"/>
    <xsl:import href="divGen.xsl"/>
    
    <xsl:import href="my-html_core.xsl"/>
@@ -107,62 +109,6 @@
          unless they start with "./"</desc>
    </doc>
    <xsl:param name="graphicsPrefix"/>
-   
-   <!-- pobrano iz Stylesheets-master/common/functions.xsl  -->
-   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-      <desc>[localisation] dummy template for overriding in a local system<param name="word">the word(s) to translate</param>
-      </desc>
-   </doc>
-   <xsl:variable name="myi18n" select="document('../myi18n.xml',document(''))"/>
-   <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
-      <xsldoc:desc/>
-      <xsldoc:param name="word"/>
-   </xsldoc:doc>
-   <xsl:template name="myi18n">
-      <xsl:param name="word"/>
-      <xsl:variable name="Word">
-         <xsl:value-of select="normalize-space($word)"/>
-      </xsl:variable>
-      <xsl:for-each select="$myi18n">
-         <xsl:choose>
-            <xsl:when test="key('KEYS',$Word)/text[@xml:lang=$documentationLanguage]">
-               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang=$documentationLanguage]"/>
-            </xsl:when>
-            <xsl:when test="key('KEYS',$Word)/text[@lang3=$documentationLanguage]">
-               <xsl:value-of select="key('KEYS',$Word)/text[lang3=$documentationLanguage]"/>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang='sl']"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </xsl:for-each>
-   </xsl:template>
-   
-   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-      <desc>Dodaten template za i18n, ki upošteva tudi predhodno določeni jezik</desc>
-      <param name="word"/>
-      <param name="thisLanguage"/>
-   </doc>
-   <xsl:template name="myi18n-lang">
-      <xsl:param name="word"/>
-      <xsl:param name="thisLanguage"/>
-      <xsl:variable name="Word">
-         <xsl:value-of select="normalize-space($word)"/>
-      </xsl:variable>
-      <xsl:for-each select="$myi18n">
-         <xsl:choose>
-            <xsl:when test="key('KEYS',$Word)/text[@xml:lang=$thisLanguage]">
-               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang=$thisLanguage]"/>
-            </xsl:when>
-            <xsl:when test="key('KEYS',$Word)/text[@lang3=$thisLanguage]">
-               <xsl:value-of select="key('KEYS',$Word)/text[lang3=$thisLanguage]"/>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="key('KEYS',$Word)/text[@xml:lang='sl']"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </xsl:for-each>
-   </xsl:template>
    
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[html] Generate name for a chunk of output<param name="ident">ident</param>

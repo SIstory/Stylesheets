@@ -1,4 +1,4 @@
-#SIstory TEI Stylesheets
+# SIstory TEI Stylesheets
 
 A profile containing a set of TEI XSL stylesheets to transform TEI XML documents to HTML5. Used by [History of Slovenia - SIstory](http://sistory.si/).
 

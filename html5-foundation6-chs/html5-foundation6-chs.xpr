@@ -18,11 +18,13 @@
             <file name="to.xsl"/>
         </folder>
         <file name="bibliography.xsl"/>
+        <file name="divGen-common.xsl"/>
         <file name="divGen.xsl"/>
         <file name="header.xsl"/>
         <file name="my-html_core.xsl"/>
         <file name="my-html_namesdates.xsl"/>
         <file name="my-html_param.xsl"/>
+        <file name="myi18n.xsl"/>
         <file name="file:/Users/administrator/Documents/moje/publikacije-XSLT/sistory/html5-foundation6-chs/new-html_core.xsl">
             <file name="my-html_namesdates.xsl"/>
         </file>

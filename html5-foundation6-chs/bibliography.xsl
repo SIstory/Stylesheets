@@ -23,9 +23,6 @@
     </xsl:template>
     
     <xsl:template match="tei:listBibl">
-        <xsl:if test="@xml:id">
-            <a id="{@xml:id}"></a>
-        </xsl:if>
         <xsl:if test="tei:head">
             <p><xsl:value-of select="tei:head"/>:</p>
         </xsl:if>
@@ -33,18 +30,33 @@
             <!-- neoštevilčen seznam -->
             <xsl:when test=".[@type='bulleted'] or .[@type='unordered'] or .[@rend='bulleted'] or .[@rend='unordered']">
                 <ul class="disc">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </ul>
             </xsl:when>
             <!-- oštevilčen seznam -->
             <xsl:when test=".[@type='ordered'] or .[@rend='ordered']">
                 <ol>
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </ol>
             </xsl:when>
             <!-- Če atribut type ni vpisan (oziroma, ni nobenega od zgoraj naštetih), dobi avtomatično krogec. -->
             <xsl:otherwise>
                 <ul class="circle">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </ul>
             </xsl:otherwise>
@@ -62,7 +74,12 @@
                 <!-- Vsaka bibliografska enota obvezno dobi anchor, da se lahko na
                      njega sklicujemo iz literature v opombah.
                      Nujno je potreben pri iskalniku -->
-                <li id="{@xml:id}" itemscope="">
+                <li itemscope="">
+                    <xsl:if test="@xml:id">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="@xml:id"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <!-- Ločim, če je schema.org članek ali knjiga. PREVERI ŠE DRUGE MOŽNOSTI! -->
                     <xsl:choose>
                         <xsl:when test="tei:analytic">

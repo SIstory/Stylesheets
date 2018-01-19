@@ -75,64 +75,64 @@
         <xsl:variable name="numPlace">
             <xsl:number value="$numLevel"/>
         </xsl:variable>
-        <!-- anchor krajevna imena -->
-        <a id="{concat('kraj-',$numPlace)}"></a>
-        <!-- ime kraja in povezava na imensko kazalo -->
-        <xsl:choose>
-            <xsl:when test="@ref">
-                <xsl:variable name="referenca" select="substring-after(@ref,'#')"/>
-                <span itemscope="" itemtype="http://schema.org/Place">
-                    <span itemprop="name">
-                        <xsl:apply-templates/>
+        <span id="{concat('kraj-',$numPlace)}" class="teiplace">
+            <!-- ime kraja in povezava na imensko kazalo -->
+            <xsl:choose>
+                <xsl:when test="@ref">
+                    <xsl:variable name="referenca" select="substring-after(@ref,'#')"/>
+                    <span itemscope="" itemtype="http://schema.org/Place">
+                        <span itemprop="name">
+                            <xsl:apply-templates/>
+                        </span>
                     </span>
-                </span>
-                <sup>
-                    <a class="place">
-                        <xsl:for-each select="//tei:place[@xml:id = $referenca]">
-                            <xsl:attribute name="href">
-                                <!-- krajevno kazalo je vedno spravljeno v datoteki places.html
+                    <sup>
+                        <a class="place">
+                            <xsl:for-each select="//tei:place[@xml:id = $referenca]">
+                                <xsl:attribute name="href">
+                                    <!-- krajevno kazalo je vedno spravljeno v datoteki places.html
                                     (generira iz tei:divGen[@type='places'] -->
-                                <xsl:value-of select="concat('places.html#',./@xml:id)"/>
+                                    <xsl:value-of select="concat('places.html#',./@xml:id)"/>
+                                </xsl:attribute>
+                            </xsl:for-each>
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="concat('Krajevno kazalo: kraj št. ',$numPlace)"/>
                             </xsl:attribute>
-                        </xsl:for-each>
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="concat('Krajevno kazalo: kraj št. ',$numPlace)"/>
-                        </xsl:attribute>
-                        <xsl:text>[kr.]</xsl:text>
-                    </a>
-                </sup>
-            </xsl:when>
-            <xsl:when test="@corresp">
-                <xsl:variable name="povezava" select="@corresp"/>
-                <span itemscope="" itemtype="http://schema.org/Place">
-                    <span itemprop="name">
-                        <xsl:apply-templates/>
+                            <xsl:text>[kr.]</xsl:text>
+                        </a>
+                    </sup>
+                </xsl:when>
+                <xsl:when test="@corresp">
+                    <xsl:variable name="povezava" select="@corresp"/>
+                    <span itemscope="" itemtype="http://schema.org/Place">
+                        <span itemprop="name">
+                            <xsl:apply-templates/>
+                        </span>
                     </span>
-                </span>
-                <sup>
-                    <a class="place">
-                        <xsl:for-each select="//tei:place[@corresp = $povezava]">
-                            <!-- ker nimajo svojega @xml:id, smo ustavrili anchorje glede na njihovo mesto v listPlace -->
-                            <xsl:variable name="numLevel">
-                                <xsl:number count="tei:place" level="any"/>
-                            </xsl:variable>
-                            <xsl:variable name="numPlaceHead">
-                                <xsl:number value="$numLevel"/>
-                            </xsl:variable>
-                            <xsl:attribute name="href">
-                                <!-- krajevno kazalo je vedno spravljeno v datoteki places.html
+                    <sup>
+                        <a class="place">
+                            <xsl:for-each select="//tei:place[@corresp = $povezava]">
+                                <!-- ker nimajo svojega @xml:id, smo ustavrili anchorje glede na njihovo mesto v listPlace -->
+                                <xsl:variable name="numLevel">
+                                    <xsl:number count="tei:place" level="any"/>
+                                </xsl:variable>
+                                <xsl:variable name="numPlaceHead">
+                                    <xsl:number value="$numLevel"/>
+                                </xsl:variable>
+                                <xsl:attribute name="href">
+                                    <!-- krajevno kazalo je vedno spravljeno v datoteki places.html
                                     (generira iz tei:divGen[@type='places'] -->
-                                <xsl:value-of select="concat('places.html','#place-',$numPlaceHead)"/>
+                                    <xsl:value-of select="concat('places.html','#place-',$numPlaceHead)"/>
+                                </xsl:attribute>
+                            </xsl:for-each>
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="concat('Krajevno kazalo: kraj št. ',$numPlace)"/>
                             </xsl:attribute>
-                        </xsl:for-each>
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="concat('Krajevno kazalo: kraj št. ',$numPlace)"/>
-                        </xsl:attribute>
-                        <xsl:text>[kr.]</xsl:text>
-                    </a>
-                </sup>
-            </xsl:when>
-        </xsl:choose>
+                            <xsl:text>[kr.]</xsl:text>
+                        </a>
+                    </sup>
+                </xsl:when>
+            </xsl:choose>
+        </span>
     </xsl:template>
     
     <xsl:template match="tei:persName">
@@ -142,51 +142,51 @@
         <xsl:variable name="numPerson">
             <xsl:number value="$numLevel"/>
         </xsl:variable>
-        <!-- anchor osebe -->
-        <a id="{concat('person-',$numPerson)}"></a>
-        <xsl:choose>
-            <xsl:when test="tei:forename or tei:surname">
-                <xsl:apply-templates/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:choose>
-                    <!-- osebe, ki so referenca na seznam oseb -->
-                    <xsl:when test="@ref">
-                        <span itemscope="" itemtype="http://schema.org/Person">
-                            <span itemprop="name">
-                                <xsl:apply-templates/>
+        <span  id="{concat('person-',$numPerson)}" class="teiperson">
+            <xsl:choose>
+                <xsl:when test="tei:forename or tei:surname">
+                    <xsl:apply-templates/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <!-- osebe, ki so referenca na seznam oseb -->
+                        <xsl:when test="@ref">
+                            <span itemscope="" itemtype="http://schema.org/Person">
+                                <span itemprop="name">
+                                    <xsl:apply-templates/>
+                                </span>
                             </span>
-                        </span>
-                        <sup>
-                            <xsl:variable name="sistoryPath">
-                                <xsl:if test="$chapterAsSIstoryPublications='true'">
-                                    <xsl:call-template name="sistoryPath">
-                                        <xsl:with-param name="chapterID">persons</xsl:with-param>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:variable>
-                            <a class="person">
-                                <xsl:attribute name="href">
-                                    <!-- imensko kazalo je vedno spravljeno v datoteki persons.html
+                            <sup>
+                                <xsl:variable name="sistoryPath">
+                                    <xsl:if test="$chapterAsSIstoryPublications='true'">
+                                        <xsl:call-template name="sistoryPath">
+                                            <xsl:with-param name="chapterID">persons</xsl:with-param>
+                                        </xsl:call-template>
+                                    </xsl:if>
+                                </xsl:variable>
+                                <a class="person">
+                                    <xsl:attribute name="href">
+                                        <!-- imensko kazalo je vedno spravljeno v datoteki persons.html
                                     (generira iz tei:divGen[@type='persons'] -->
-                                    <xsl:value-of select="concat($sistoryPath,'persons.html',@ref)"/>
-                                </xsl:attribute>
-                                <xsl:attribute name="title">
-                                    <xsl:variable name="persName-text1">
-                                        <xsl:sequence select="tei:i18n('persName-text1')"/>
-                                    </xsl:variable>
-                                    <xsl:value-of select="concat($persName-text1,$numPerson)"/>
-                                </xsl:attribute>
-                                <xsl:sequence select="tei:i18n('persName-text2')"/>
-                            </a>
-                        </sup>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:apply-templates/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:otherwise>
-        </xsl:choose>
+                                        <xsl:value-of select="concat($sistoryPath,'persons.html',@ref)"/>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="title">
+                                        <xsl:variable name="persName-text1">
+                                            <xsl:sequence select="tei:i18n('persName-text1')"/>
+                                        </xsl:variable>
+                                        <xsl:value-of select="concat($persName-text1,$numPerson)"/>
+                                    </xsl:attribute>
+                                    <xsl:sequence select="tei:i18n('persName-text2')"/>
+                                </a>
+                            </sup>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+        </span>
     </xsl:template>
     
     <xsl:template match="tei:forename">
@@ -219,34 +219,34 @@
         <xsl:variable name="numOrganization">
             <xsl:number value="$numLevel"/>
         </xsl:variable>
-        <!-- anchor organizacije -->
-        <a id="{concat('org-',$numOrganization)}"></a>
-        <xsl:choose>
-            <!-- osebe, ki so referenca na seznam oseb -->
-            <xsl:when test="@ref">
-                <span itemscope="" itemtype="http://schema.org/Organization">
-                    <span itemprop="name">
-                        <xsl:apply-templates/>
+        <span id="{concat('org-',$numOrganization)}" class="teiorganization">
+            <xsl:choose>
+                <!-- osebe, ki so referenca na seznam oseb -->
+                <xsl:when test="@ref">
+                    <span itemscope="" itemtype="http://schema.org/Organization">
+                        <span itemprop="name">
+                            <xsl:apply-templates/>
+                        </span>
                     </span>
-                </span>
-                <sup>
-                    <a class="organization">
-                        <xsl:attribute name="href">
-                            <!-- kazalo organizacij je vedno spravljeno v datoteki organizations.html
+                    <sup>
+                        <a class="organization">
+                            <xsl:attribute name="href">
+                                <!-- kazalo organizacij je vedno spravljeno v datoteki organizations.html
                                  (generira iz tei:divGen[@type='organizations'] -->
-                            <xsl:value-of select="concat('organizations.html',./@ref)"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="concat('Kazalo organizacij: organizacija št. ',$numOrganization)"/>
-                        </xsl:attribute>
-                        <xsl:text>[or.]</xsl:text>
-                    </a>
-                </sup>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates/>
-            </xsl:otherwise>
-        </xsl:choose>
+                                <xsl:value-of select="concat('organizations.html',./@ref)"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="concat('Kazalo organizacij: organizacija št. ',$numOrganization)"/>
+                            </xsl:attribute>
+                            <xsl:text>[or.]</xsl:text>
+                        </a>
+                    </sup>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </span>
     </xsl:template>
     
     <!-- naslovi del znotraj odstavkov in podobno -->
