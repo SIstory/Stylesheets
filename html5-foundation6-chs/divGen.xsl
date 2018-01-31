@@ -902,8 +902,12 @@
                 <xsl:variable name="besedilo">
                     <xsl:apply-templates mode="besedilo"/>
                 </xsl:variable>
+                <xsl:variable name="title-first">
+                    <xsl:apply-templates select="parent::tei:div/tei:head[1]" mode="chapters-head"/>
+                </xsl:variable>
+                
                 <xsl:text>{ "title": "</xsl:text>
-                <xsl:value-of select="normalize-space(translate(translate(parent::tei:div/tei:head[1],'&#xA;',' '),'&quot;',''))"/>
+                <xsl:value-of select="normalize-space(translate(translate($title-first,'&#xA;',' '),'&quot;',''))"/>
                 <!--<xsl:value-of select="normalize-space(translate(translate(ancestor::tei:div[@xml:id][parent::tei:front | parent::tei:body | parent::tei:back]/tei:head[1],'&#xA;',' '),'&quot;',''))"/>-->
                 <xsl:text>", "text": "</xsl:text>
                 <xsl:value-of select="normalize-space(translate($besedilo,'&#xA;&quot;&#92;','&#x20;'))"/>
