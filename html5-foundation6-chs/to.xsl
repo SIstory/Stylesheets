@@ -189,7 +189,7 @@
       </xsl:if>
       <link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css" rel="stylesheet" type="text/css" />
       <link href="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/css/normalize.css')}" rel="stylesheet" type="text/css" />
-      <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}"  rel="stylesheet" type="text/css" />
+      <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}" rel="stylesheet" type="text/css" />
    </xsl:template>
    <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
       <xsldoc:desc>[html] Hook where extra Javascript functions can be defined</xsldoc:desc>

@@ -178,6 +178,27 @@
     <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
   </entry>
   <entry>
+    <key>Študija</key>
+    <text xml:lang="en" lang3="eng">Study</text>
+    <text xml:lang="sl" lang3="slv">Študija</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
+    <key>Študiji</key>
+    <text xml:lang="en" lang3="eng">Studies</text>
+    <text xml:lang="sl" lang3="slv">Študiji</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
+    <key>Študije</key>
+    <text xml:lang="en" lang3="eng">Studies</text>
+    <text xml:lang="sl" lang3="slv">Študije</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
     <key>Priloga</key>
     <text xml:lang="en" lang3="eng">Appendix</text>
     <text xml:lang="sl" lang3="slv">Priloga</text>
