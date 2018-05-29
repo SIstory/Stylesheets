@@ -967,6 +967,14 @@ height: </xsl:text>
                 </header>
                 <nav xmlns:epub="http://www.idpf.org/2007/ops" epub:type="toc" id="toc">
                   <ol>
+                    <!-- dodam za divGen v front -->
+                    <xsl:for-each select="tei:text/tei:front/tei:divGen[not(@type='search')][not(@type='teiHeader')]">
+                      <li>
+                        <a href="{@xml:id}.html">
+                          <xsl:value-of select="tei:head"/>
+                        </a>
+                      </li>
+                    </xsl:for-each>
                     <xsl:for-each select="$TOC/html:TOC/html:ul/html:li">
                       <xsl:choose>
                         <xsl:when test="not(html:a)"/>
@@ -981,6 +989,14 @@ height: </xsl:text>
                           </li>
                         </xsl:otherwise>
                       </xsl:choose>
+                    </xsl:for-each>
+                    <!-- dodam za divGen v back -->
+                    <xsl:for-each select="tei:text/tei:back/tei:divGen">
+                      <li>
+                        <a href="{@xml:id}.html">
+                          <xsl:value-of select="tei:head"/>
+                        </a>
+                      </li>
                     </xsl:for-each>
                     <li>
                       <a href="titlepageback.html">[About this book]</a>
