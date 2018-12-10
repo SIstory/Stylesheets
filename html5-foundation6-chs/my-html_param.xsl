@@ -7,7 +7,7 @@
     
     <!-- generična pot do css in js -->
     <!--<xsl:param name="path-general">../../../</xsl:param>-->
-    <xsl:param name="path-general">http://www2.sistory.si/</xsl:param>
+    <xsl:param name="path-general">http://www2.sistory.si/publikacije/</xsl:param>
     
     <!-- Če je chapterAsSIstoryPublications true, potem generirani HTML dokumenti posameznih div
         poglavij pripadajo samostojnim SIstory publikacijam. SIstory ID teh publikacij je 

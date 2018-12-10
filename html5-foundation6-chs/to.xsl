@@ -174,28 +174,28 @@
       <meta name="keywords" content="{$keywords}"/>
    </xsl:template>
    <xsl:param name="cssFile">
-      <xsl:value-of select="concat($path-general,'publikacije/themes/foundation/6/css/foundation.min.css')"/>
+      <xsl:value-of select="concat($path-general,'themes/foundation/6/css/foundation.min.css')"/>
    </xsl:param>
    <xsl:param name="cssPrintFile"></xsl:param>
    <xsl:param name="cssSecondaryFile">
-      <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory.css')"/>
+      <xsl:value-of select="concat($path-general,'themes/css/foundation/6/sistory.css')"/>
    </xsl:param>
    <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
       <xsldoc:desc/>
    </xsldoc:doc>
    <xsl:template name="cssHook">
       <xsl:if test="$title-bar-sticky = 'true'">
-         <xsl:value-of select="concat($path-general,'publikacije/themes/css/foundation/6/sistory-sticky_title_bar.css')"/>
+         <xsl:value-of select="concat($path-general,'themes/css/foundation/6/sistory-sticky_title_bar.css')"/>
       </xsl:if>
       <link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.min.css" rel="stylesheet" type="text/css" />
-      <link href="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/css/normalize.css')}" rel="stylesheet" type="text/css" />
-      <link href="{concat($path-general,'publikacije/themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}" rel="stylesheet" type="text/css" />
+      <link href="{concat($path-general,'themes/plugin/TipueSearch/6.1/tipuesearch/css/normalize.css')}" rel="stylesheet" type="text/css" />
+      <link href="{concat($path-general,'themes/css/plugin/TipueSearch/6.1/my-tipuesearch.css')}" rel="stylesheet" type="text/css" />
    </xsl:template>
    <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
       <xsldoc:desc>[html] Hook where extra Javascript functions can be defined</xsldoc:desc>
    </xsldoc:doc>
    <xsl:template name="javascriptHook">
-      <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/jquery.js')}"></script>
+      <script src="{concat($path-general,'themes/foundation/6/js/vendor/jquery.js')}"></script>
       <!-- za highcharts -->
       <xsl:if test="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']]">
          <xsl:variable name="jsfile" select="//tei:figure[@type = 'chart'][tei:graphic[@mimeType = 'application/javascript']][1]/tei:graphic[@mimeType = 'application/javascript']/@url"/>
@@ -219,17 +219,17 @@
             <xsl:when test="$languages-locale='true'">
                <xsl:choose>
                   <xsl:when test="$thisLanguage='sl' or $thisLanguage='slv'">
-                     <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/6.1/tipuesearch_set-sl.js')}"></script>
+                     <script src="{concat($path-general,'themes/js/plugin/TipueSearch/6.1/tipuesearch_set-sl.js')}"></script>
                   </xsl:when>
                   <xsl:when test="$thisLanguage='en' or $thisLanguage='eng'">
-                     <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
+                     <script src="{concat($path-general,'themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
                   </xsl:when>
                   <xsl:when test="$thisLanguage='Cy-sr'">
-                     <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/6.1/tipuesearch_set-Cy-sr.js')}"></script>
+                     <script src="{concat($path-general,'themes/js/plugin/TipueSearch/6.1/tipuesearch_set-Cy-sr.js')}"></script>
                   </xsl:when>
                   <!-- drugače je angleščina -->
                   <xsl:otherwise>
-                     <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
+                     <script src="{concat($path-general,'themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
                   </xsl:otherwise>
                </xsl:choose>
             </xsl:when>
@@ -237,27 +237,27 @@
             <xsl:otherwise>
                <xsl:choose>
                   <xsl:when test="$documentationLanguage = 'en'">
-                     <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
+                     <script src="{concat($path-general,'themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch_set.js')}"></script>
                   </xsl:when>
                   <!-- drugače je moj slovenski prevod -->
                   <xsl:otherwise>
-                     <script src="{concat($path-general,'publikacije/themes/js/plugin/TipueSearch/6.1/tipuesearch_set-sl.js')}"></script>
+                     <script src="{concat($path-general,'themes/js/plugin/TipueSearch/6.1/tipuesearch_set-sl.js')}"></script>
                   </xsl:otherwise>
                </xsl:choose>
             </xsl:otherwise>
          </xsl:choose>
-         <script src="{concat($path-general,'publikacije/themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch.min.js')}"></script>
+         <script src="{concat($path-general,'themes/plugin/TipueSearch/6.1/tipuesearch/tipuesearch.min.js')}"></script>
       </xsl:if>
    </xsl:template>
    <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
       <xsldoc:desc/>
    </xsldoc:doc>
    <xsl:template name="bodyEndHook">
-      <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/what-input.js')}"></script>
-      <script src="{concat($path-general,'publikacije/themes/foundation/6/js/vendor/foundation.min.js')}"></script>
-      <script src="{concat($path-general,'publikacije/themes/foundation/6/js/app.js')}"></script>
+      <script src="{concat($path-general,'themes/foundation/6/js/vendor/what-input.js')}"></script>
+      <script src="{concat($path-general,'themes/foundation/6/js/vendor/foundation.min.js')}"></script>
+      <script src="{concat($path-general,'themes/foundation/6/js/app.js')}"></script>
       <!-- back-to-top -->
-      <script src="{concat($path-general,'publikacije/themes/js/plugin/back-to-top/back-to-top.js')}"></script>
+      <script src="{concat($path-general,'themes/js/plugin/back-to-top/back-to-top.js')}"></script>
    </xsl:template>
    
    

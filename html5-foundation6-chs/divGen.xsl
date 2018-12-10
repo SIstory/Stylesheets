@@ -1056,14 +1056,14 @@
                         <xsl:text>: </xsl:text>
                     </xsl:if>
                 </xsl:for-each>
-                <xsl:if test="tei:div[@type][@xml:id]">
-                    <ul>
-                        <xsl:for-each select="tei:div[@type][@xml:id]">
-                            <xsl:call-template name="TOC-title-type-li"/>
-                        </xsl:for-each>
-                    </ul>
-                </xsl:if>
             </a>
+            <xsl:if test="tei:div[@type][@xml:id]">
+                <ul>
+                    <xsl:for-each select="tei:div[@type][@xml:id]">
+                        <xsl:call-template name="TOC-title-type-li"/>
+                    </xsl:for-each>
+                </ul>
+            </xsl:if>
         </li>
     </xsl:template>
     
