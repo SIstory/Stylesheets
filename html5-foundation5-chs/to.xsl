@@ -13,9 +13,9 @@
    <xsl:import href="../../../html5/microdata.xsl"/> -->
    
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/html5.xsl -->
-   <xsl:import href="../../Stylesheets-master/html5/html5.xsl"/>
+   <xsl:import href="../../tei-xsl-7.47.0/xml/tei/stylesheet/html5/html5.xsl"/>
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/microdata.xsl -->
-   <xsl:import href="../../Stylesheets-master/html5/microdata.xsl"/>
+   <xsl:import href="../../tei-xsl-7.47.0/xml/tei/stylesheet/html5/microdata.xsl"/>
    
    <xsl:import href="new-html_figures.xsl"/>
    <xsl:import href="new-html_core.xsl"/>

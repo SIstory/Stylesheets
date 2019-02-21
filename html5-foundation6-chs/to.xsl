@@ -14,9 +14,9 @@
    <xsl:import href="../../../html5/microdata.xsl"/> -->
    
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/html5.xsl -->
-   <xsl:import href="../../Stylesheets-master/html5/html5.xsl"/>
+   <xsl:import href="../../tei-xsl-7.47.0/xml/tei/stylesheet/html5/html5.xsl"/>
    <!-- change path to your TEI Stylesheets https://github.com/TEIC/Stylesheets/blob/master/html5/microdata.xsl -->
-   <xsl:import href="../../Stylesheets-master/html5/microdata.xsl"/>
+   <xsl:import href="../../tei-xsl-7.47.0/xml/tei/stylesheet/html5/microdata.xsl"/>
    <xsl:import href="my-html_param.xsl"/>
    <xsl:import href="myi18n.xsl"/>
    
@@ -88,6 +88,9 @@
    
    <!-- head v drugem div je h3 itn. Glej še spodaj template stdheader -->
    <xsl:param name="divOffset">2</xsl:param>
+   
+   <xsl:param name="homeLabel">SIstory</xsl:param>
+   <xsl:param name="homeURL">http://sistory.si/</xsl:param>
    
    <xsldoc:doc xmlns:xsldoc="http://www.oxygenxml.com/ns/doc/xsl">
       <xsldoc:desc>Standardni footer je brez vsebine (po potrebi dodaj tukaj vsebino)</xsldoc:desc>

@@ -7,56 +7,6 @@
     exclude-result-prefixes="tei" 
     version="2.0">
     
-    <xsl:template name="attribute-href-to-repository">
-        <xsl:attribute name="href">
-            <xsl:choose>
-                <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')]">
-                    <xsl:value-of select="concat('http://hdl.handle.net/11686/',substring-after(self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')],'sistory.'))"/>
-                </xsl:when>
-                <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')]">
-                    <xsl:value-of select="concat('http://hdl.handle.net/11686/',substring-after(ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')],'sistory.'))"/>
-                </xsl:when>
-                <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
-                    <xsl:variable name="teiParentId" select="self::tei:teiCorpus/@xml:id"/>
-                    <xsl:variable name="sistoryId">
-                        <xsl:if test="$chapterAsSIstoryPublications='true'">
-                            <xsl:call-template name="sistoryID">
-                                <xsl:with-param name="chapterID" select="$teiParentId"/>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:variable>
-                    <xsl:value-of select="concat('http://hdl.handle.net/11686/',$sistoryId)"/>
-                </xsl:when>
-                <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">
-                    <xsl:variable name="teiParentId" select="ancestor-or-self::tei:TEI/@xml:id"/>
-                    <xsl:variable name="sistoryId">
-                        <xsl:if test="$chapterAsSIstoryPublications='true'">
-                            <xsl:call-template name="sistoryID">
-                                <xsl:with-param name="chapterID" select="$teiParentId"/>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:variable>
-                    <xsl:value-of select="concat('http://hdl.handle.net/11686/',$sistoryId)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref">
-                            <!-- upoštevamo samo prvo povezavo -->
-                            <xsl:value-of select="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace[tei:ref][1]/tei:ref"/>
-                        </xsl:when>
-                        <xsl:when test="ancestor-or-self::tei:TEI/tei:fileDesc/tei:publicationStmt/tei:pubPlace/tei:ref">
-                            <!-- upoštevamo samo prvo povezavo -->
-                            <xsl:value-of select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:pubPlace[tei:ref][1]/tei:ref"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>http://www.sistory.si</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:attribute>
-    </xsl:template>
-    
     <xsl:template name="html-header">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -89,8 +39,7 @@
                             </xsl:choose>
                         </div>
                         <div class="title-bar-right">
-                            <a class="title-bar-title">
-                                <xsl:call-template name="attribute-href-to-repository"/>
+                            <a class="title-bar-title" href="{$homeURL}">
                                 <i class="fi-home" style="color:white;"></i>
                             </a>
                         </div>
@@ -119,28 +68,11 @@
                         <xsl:attribute name="data-top-anchor">1</xsl:attribute>
                     </xsl:if>
                     <div class="title-bar-left">
-                        <a class="title-bar-title">
-                            <xsl:call-template name="attribute-href-to-repository"/>
+                        <a class="title-bar-title" href="{$homeURL}">
                             <i class="fi-home" style="color:white;"></i>
                             <xsl:text> </xsl:text>
                             <span>
-                                <xsl:choose>
-                                    <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID']">
-                                        <xsl:choose>
-                                            <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')]">SIstory</xsl:when>
-                                            <!-- se v nove when lahko dodate še druge potencialne ustanove -->
-                                        </xsl:choose>
-                                    </xsl:when>
-                                    <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID']">
-                                        <xsl:choose>
-                                            <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='PID'][starts-with(.,'sistory.')]">SIstory</xsl:when>
-                                            <!-- se v nove when lahko dodate še druge potencialne ustanove -->
-                                        </xsl:choose>
-                                    </xsl:when>
-                                    <xsl:when test="self::tei:teiCorpus/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">SIstory</xsl:when>
-                                    <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='sistory']">SIstory</xsl:when>
-                                    <xsl:otherwise>SIstory</xsl:otherwise>
-                                </xsl:choose>
+                                <xsl:value-of select="$homeLabel"/>
                             </span>
                         </a>
                     </div>
