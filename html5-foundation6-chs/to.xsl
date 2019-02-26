@@ -113,27 +113,6 @@
    </doc>
    <xsl:param name="graphicsPrefix"/>
    
-   <!--<doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-      <desc>[html] Generate name for a chunk of output<param name="ident">ident</param>
-      </desc>
-      <param name="ident"/>
-   </doc>
-   <xsl:template name="outputChunkName">
-      <xsl:param name="ident"/>
-      <xsl:if test="not($outputDir ='')">
-         <xsl:value-of select="if (matches($outputDir,'^[A-Za-z]:')) then concat('file:///',$outputDir) else $outputDir"/>
-         <xsl:if test="not(substring($outputDir,string-length($outputDir),string-length($outputDir))='/')">
-            <xsl:text>/</xsl:text>
-         </xsl:if>
-         <!-\- dodam dodatno ime za mapo iz xml:id -\->
-         <xsl:if test="ancestor-or-self::tei:TEI/@xml:id">
-            <xsl:value-of select="concat(ancestor-or-self::tei:TEI/@xml:id,'/')"/>
-         </xsl:if>
-      </xsl:if>
-      <xsl:value-of select="if (matches($ident,'^[A-Za-z]:')) then concat('file:///',$ident) else $ident"/>
-      <xsl:value-of select="$outputSuffix"/>
-   </xsl:template>-->
-   
    <!-- vzeto iz html.xsl -->
    <!-- Vsak body mora nujno imeti div in tudi, če ima samo enega, naredi na podlagi njegovega xml:id nov html dokument -->
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">

@@ -304,6 +304,27 @@
     <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
   </entry>
   <entry>
+    <key>Kolofon</key>
+    <text xml:lang="en" lang3="eng">Colophon</text>
+    <text xml:lang="sl" lang3="slv">Kolofon</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
+    <key>Kolofona</key>
+    <text xml:lang="en" lang3="eng">Colophons</text>
+    <text xml:lang="sl" lang3="slv">Kolofona</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
+    <key>Kolofoni</key>
+    <text xml:lang="en" lang3="eng">Colophons</text>
+    <text xml:lang="sl" lang3="slv">Kolofoni</text>
+    <text xml:lang="Cy-sr" lang3="Cy-srp"></text>
+    <text xml:lang="Lt-sr" lang3="Lt-srp"></text>
+  </entry>
+  <entry>
     <key>teiHeader</key>
     <text xml:lang="en" lang3="eng">TEI header</text>
     <text xml:lang="sl" lang3="slv">Kolofon TEI</text>
