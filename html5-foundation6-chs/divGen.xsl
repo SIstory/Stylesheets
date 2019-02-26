@@ -877,7 +877,7 @@
     <xsl:template name="tipuesearch_content">
         <xsl:param name="tei-id"/>
         <xsl:param name="sistoryAbsolutePath"/>
-        <xsl:variable name="datoteka-js" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/','tipuesearch_content.js')"/>
+        <xsl:variable name="datoteka-js" select="concat($outputDir,'tipuesearch_content.js')"/>
         <xsl:result-document href="{$datoteka-js}" method="text" encoding="UTF-8">
             <!-- ZAČETEK JavaScript dokumenta -->
             <xsl:text>var tipuesearch = {"pages": [

@@ -6,7 +6,7 @@
     version="2.0">
     
     <xsl:template match="tei:divGen[@xml:id]">
-        <xsl:variable name="datoteka" select="concat($outputDir,ancestor::tei:TEI/@xml:id,'/',@xml:id,'.html')"/>
+        <xsl:variable name="datoteka" select="concat($outputDir,@xml:id,'.html')"/>
         <xsl:result-document href="{$datoteka}" doctype-system="" omit-xml-declaration="yes">
             <!-- vključimo HTML5 deklaracijo, skupaj z kodo za delovanje starejših verzij Internet Explorerja -->
             <xsl:value-of select="$HTML5_declaracion" disable-output-escaping="yes"/>
