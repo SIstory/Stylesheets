@@ -7,6 +7,11 @@
     exclude-result-prefixes="tei" 
     version="2.0">
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="html-header">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -141,6 +146,12 @@
         </header>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+    </doc>
     <xsl:template name="title-bar-list-of-contents">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -376,6 +387,13 @@
         </xsl:if>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-colophon">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -434,6 +452,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-toc">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -492,6 +517,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-front">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -556,6 +588,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-body">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -606,6 +645,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-content">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -629,6 +675,13 @@
     </xsl:template>
     
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-bibliogr">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -701,6 +754,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-study">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -765,6 +825,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-appendix">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -829,6 +896,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-summary">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -893,6 +967,13 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+        <param name="title-bar-type"></param>
+        <param name="sistoryParentPath"></param>
+    </doc>
     <xsl:template name="header-back-index">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -951,6 +1032,11 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="header-locale">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="thisLanguage"/>
@@ -1020,13 +1106,23 @@
         </li>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+    </doc>
     <xsl:template match="tei:head" mode="chapters-head">
         <xsl:apply-templates mode="chapters-head"/>
     </xsl:template>
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+    </doc>
     <xsl:template match="tei:note" mode="chapters-head">
         <!-- ne procesirmar -->
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="title-bar-type"></param>
+    </doc>
     <xsl:template name="attribute-title-bar-type">
         <xsl:param name="title-bar-type"/>
         <xsl:attribute name="class">
@@ -1035,6 +1131,11 @@
         </xsl:attribute>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc></desc>
+        <param name="thisChapter-id"></param>
+        <param name="title-bar-type"></param>
+    </doc>
     <xsl:template name="title-bar-list-of-contents-subchapters">
         <xsl:param name="thisChapter-id"/>
         <xsl:param name="title-bar-type"/>
@@ -1069,7 +1170,10 @@
         </xsl:if>
     </xsl:template>
     
-    <!-- izpis imena, glede na število kazal: so lahko v tei:front -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis imena, glede na število kazal: so lahko v tei:front</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-toc-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1114,7 +1218,11 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- izpis imena, glede na število indeksov (krajevnih, osebnih, organizacij): so lahko v tei:back -->
+   
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis imena, glede na število indeksov (krajevnih, osebnih, organizacij): so lahko v tei:back</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-index-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1160,7 +1268,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis imen, gle na cip in teiHeader kolofon -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis imen, gle na cip in teiHeader kolofon</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-colophon-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1206,7 +1317,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis imena, glede na število front/div -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis imena, glede na število front/div</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-front-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1299,7 +1413,11 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- izpis imena, glede na število body/div -->
+   
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis imena, glede na število body/div</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-body-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1375,7 +1493,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis spremnih študij, glede na število back/div -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis spremnih študij, glede na število back/div</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-study-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1421,7 +1542,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis prilog, glede na število back/div -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis prilog, glede na število back/div</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-appendix-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>
@@ -1467,7 +1591,10 @@
         </xsl:choose>
     </xsl:template>
     
-    <!-- izpis povzetkov, glede na število back/div -->
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis povzetkov, glede na število back/div</desc>
+        <param name="thisLanguage"></param>
+    </doc>
     <xsl:template name="nav-summary-head">
         <xsl:param name="thisLanguage"/>
         <xsl:choose>

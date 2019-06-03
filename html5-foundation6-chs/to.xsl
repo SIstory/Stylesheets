@@ -327,15 +327,10 @@
       <desc>Procesira index-jezikovna_koda.html strani</desc>
    </doc>
    <xsl:template name="pageLayoutSimple-locale">
-      <xsl:variable name="outputDir-extra">
-         <xsl:if test="ancestor-or-self::tei:TEI/@xml:id">
-            <xsl:value-of select="concat(ancestor-or-self::tei:TEI/@xml:id,'/')"/>
-         </xsl:if>
-      </xsl:variable>
       <xsl:for-each-group select="//tei:div[@xml:id][@xml:lang != $languages-locale-primary]" group-by="@xml:lang">
          <xsl:result-document doctype-public="{$doctypePublic}" doctype-system="{$doctypeSystem}"
             encoding="{$outputEncoding}"
-            href="{concat($outputDir,$outputDir-extra,'index-',current-grouping-key(),$outputSuffix)}"
+            href="{concat($outputDir,'index-',current-grouping-key(),$outputSuffix)}"
             method="{$outputMethod}">
             <!-- Celotno spodnjo kodo večinoma kopiram iz pageLayoutSimple -->
             <!-- vključimo HTML5 deklaracijo -->
