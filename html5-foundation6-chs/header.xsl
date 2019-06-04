@@ -700,17 +700,9 @@
                 </xsl:if>
             </xsl:variable>
             <a href="{concat($sistoryPath-bibliogr1,ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][1]/@xml:id,'.html')}">
-                <xsl:choose>
-                    <xsl:when test="$languages-locale='true'">
-                        <xsl:call-template name="myi18n-lang">
-                            <xsl:with-param name="word">Bibliografija</xsl:with-param>
-                            <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:sequence select="tei:i18n('Bibliografija')"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="nav-bibl-head">
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
             </a>
             <xsl:if test="ancestor-or-self::tei:TEI/tei:text/tei:back/tei:div[@type='bibliogr'][if ($languages-locale='true') then @xml:lang=$thisLanguage else @xml:id][2]">
                 <ul>
@@ -1489,6 +1481,25 @@
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>izpis naziva bibliografije na gornji navigaciji</desc>
+        <param name="thisLanguage"></param>
+    </doc>
+    <xsl:template name="nav-bibl-head">
+        <xsl:param name="thisLanguage"/>
+        <xsl:choose>
+            <xsl:when test="$languages-locale='true'">
+                <xsl:call-template name="myi18n-lang">
+                    <xsl:with-param name="word">Bibliografija</xsl:with-param>
+                    <xsl:with-param name="thisLanguage" select="$thisLanguage"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="tei:i18n('Bibliografija')"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
