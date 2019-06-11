@@ -70,8 +70,6 @@
         </xsl:choose>
     </xsl:template>
     
-    
-    <!-- pri tabeli ni štelo Tabela 1 itd., zato sem to dodal -->
     <!-- makeRendition po noven ne naredi pri table elementu, temveč pri parent div elementu (zaradi česar se lahko doda clas/rend table-scroll) -->
     <xsl:template match="tei:table">
         <div>
@@ -100,15 +98,7 @@
                     </xsl:if>
                 </xsl:for-each>
                 <xsl:if test="tei:head">
-                    <!-- Dopolnim caption -->
-                    <xsl:variable name="captionlabel">
-                        <xsl:call-template name="calculateTableNumber"/>
-                    </xsl:variable>
                     <caption>
-                        <b><xsl:copy-of select="$captionlabel"/>
-                            <xsl:if test="not($captionlabel = '')">
-                                <xsl:text>: </xsl:text>
-                            </xsl:if></b>
                         <xsl:apply-templates select="tei:head"/>
                     </caption>
                 </xsl:if>
