@@ -14,6 +14,9 @@
         zapisan v idno[@type='sistory'], kateri je z corresp atributom usmerjen na ustrezne div. -->
     <xsl:param name="chapterAsSIstoryPublications"></xsl:param>
     
+    <!-- če želiš imeti zgornjo header navgacijo -->
+    <xsl:param name="topNavigation">true</xsl:param>
+    
     <!-- If you want to have sticky title nav bar: true  -->
     <xsl:param name="title-bar-sticky">true</xsl:param>
     
