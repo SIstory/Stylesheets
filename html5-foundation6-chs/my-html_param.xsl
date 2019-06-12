@@ -20,6 +20,9 @@
     <!-- If you want to have sticky title nav bar: true  -->
     <xsl:param name="title-bar-sticky">true</xsl:param>
     
+    <!-- če želiš procesirati MathML ipd. formule v vseh brskalnikih -->
+    <xsl:param name="math">false</xsl:param>
+    
     <!-- parametri za locale (večjezično navigacijo po skupinah HTML dokumentov s skupnim jezikom) -->
     <!-- če hočemo locale, mora biti vrednost spodnjega parametra true (prevzeto false) -->
     <xsl:param name="languages-locale">false</xsl:param>

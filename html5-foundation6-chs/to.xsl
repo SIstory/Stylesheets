@@ -186,6 +186,9 @@
       </xsl:if>
       <!-- za back-to-top in highcharts je drugače potrebno dati jquery, vendar sedaj ne rabim dodajati jquery kodo,
          ker je že vsebovana zgoraj -->
+      <xsl:if test="$math='true'">
+         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=Accessible-full"></script>
+      </xsl:if>
    </xsl:template>
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl" class="hook">
       <desc>[html] Hook where Javascript calls can be inserted  just after &lt;body&gt;</desc>
