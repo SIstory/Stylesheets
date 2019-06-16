@@ -22,46 +22,95 @@
         </xsl:choose>
     </xsl:template>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+        <desc>Process element listBibl: spremenim ol v ul</desc>
+    </doc>
     <xsl:template match="tei:listBibl">
         <xsl:if test="tei:head">
-            <p><xsl:value-of select="tei:head"/>:</p>
+            <xsl:element name="{if (not(tei:isInline(.))) then 'div' else 'span' }">
+                <xsl:attribute name="class">listhead</xsl:attribute>
+                <xsl:apply-templates select="tei:head"/>
+            </xsl:element>
         </xsl:if>
         <xsl:choose>
-            <!-- neoštevilčen seznam -->
-            <xsl:when test=".[@type='bulleted'] or .[@type='unordered'] or .[@rend='bulleted'] or .[@rend='unordered']">
-                <ul class="disc">
-                    <xsl:if test="@xml:id">
-                        <xsl:attribute name="id">
-                            <xsl:value-of select="@xml:id"/>
-                        </xsl:attribute>
-                    </xsl:if>
-                    <xsl:apply-templates/>
-                </ul>
+            <xsl:when test="tei:biblStruct and $biblioStyle='mla'">
+                <div type="listBibl" xmlns="http://www.w3.org/1999/xhtml">	  
+                    <xsl:for-each select="tei:biblStruct">
+                        <p class="hang" xmlns="http://www.w3.org/1999/xhtml">
+                            <xsl:apply-templates select="tei:analytic" mode="mla"/>
+                            <xsl:apply-templates select="tei:monogr" mode="mla"/>
+                            <xsl:apply-templates select="tei:relatedItem" mode="mla"/>
+                            <xsl:choose>
+                                <xsl:when test="tei:note">
+                                    <xsl:apply-templates select="tei:note"/>
+                                </xsl:when>
+                                <xsl:when test="*//tei:ref/@target and not(contains(*//tei:ref/@target, '#'))">
+                                    <xsl:text>Web.&#10;</xsl:text>
+                                    <xsl:if test="*//tei:imprint/tei:date/@type='access'">
+                                        <xsl:value-of select="*//tei:imprint/tei:date[@type='access']"/>
+                                        <xsl:text>.</xsl:text>
+                                    </xsl:if>
+                                </xsl:when>
+                                <xsl:when test="tei:analytic/tei:title[@level='u'] or tei:monogr/tei:title[@level='u']"/>
+                                <xsl:otherwise>Print.&#10;</xsl:otherwise>
+                            </xsl:choose>
+                            <xsl:if test="tei:monogr/tei:imprint/tei:extent"><xsl:value-of select="tei:monogr/tei:imprint/tei:extent"/>. </xsl:if>
+                            <xsl:if test="tei:series/tei:title[@level='s']">
+                                <xsl:apply-templates select="tei:series/tei:title[@level='s']"/>
+                                <xsl:text>. </xsl:text>
+                            </xsl:if>
+                        </p>
+                    </xsl:for-each>
+                </div>
             </xsl:when>
-            <!-- oštevilčen seznam -->
-            <xsl:when test=".[@type='ordered'] or .[@rend='ordered']">
-                <ol>
-                    <xsl:if test="@xml:id">
-                        <xsl:attribute name="id">
-                            <xsl:value-of select="@xml:id"/>
-                        </xsl:attribute>
-                    </xsl:if>
-                    <xsl:apply-templates/>
+            <xsl:when test="tei:biblStruct and not(tei:bibl)">
+                <ol class="listBibl {$biblioStyle}">
+                    <xsl:for-each select="tei:biblStruct">
+                        <xsl:sort select="lower-case(normalize-space((@sortKey,tei:*[1]/tei:author/tei:surname
+                            ,tei:*[1]/tei:author/tei:orgName
+                            ,tei:*[1]/tei:author/tei:name
+                            ,tei:*[1]/tei:author
+                            ,tei:*[1]/tei:editor/tei:surname
+                            ,tei:*[1]/tei:editor/tei:name
+                            ,tei:*[1]/tei:editor
+                            ,tei:*[1]/tei:title[1])[1]))"/>
+                        <xsl:sort select="lower-case(normalize-space((
+                            tei:*[1]/tei:author/tei:forename
+                            ,tei:*[1]/tei:editor/tei:forename
+                            ,'')[1]))"/>
+                        <xsl:sort select="tei:monogr/tei:imprint/tei:date"/>
+                        <li>
+                            <xsl:call-template name="makeAnchor"/>
+                            <xsl:apply-templates select="."/>
+                        </li>
+                    </xsl:for-each>
                 </ol>
             </xsl:when>
-            <!-- Če atribut type ni vpisan (oziroma, ni nobenega od zgoraj naštetih), dobi avtomatično krogec. -->
+            <xsl:when test="tei:msDesc">
+                <xsl:for-each select="*[not(self::tei:head)]">
+                    <div class="msDesc">
+                        <xsl:apply-templates/>
+                    </div>
+                </xsl:for-each>
+            </xsl:when>
             <xsl:otherwise>
-                <ul class="circle">
-                    <xsl:if test="@xml:id">
-                        <xsl:attribute name="id">
-                            <xsl:value-of select="@xml:id"/>
-                        </xsl:attribute>
-                    </xsl:if>
-                    <xsl:apply-templates/>
+                <!-- spremenim iz ol v ul -->
+                <ul class="listBibl">
+                    <xsl:for-each select="*[not(self::tei:head)]">
+                        <li>
+                            <xsl:call-template name="makeAnchor">
+                                <xsl:with-param name="name">
+                                    <xsl:apply-templates mode="ident" select="."/>
+                                </xsl:with-param>
+                            </xsl:call-template>
+                            <xsl:apply-templates select="."/>
+                        </li>
+                    </xsl:for-each>
                 </ul>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
     
     <!-- izpis navedene bibliografije -->
     <xsl:template match="tei:biblStruct">
@@ -764,18 +813,18 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- za literaturo v seznamu literature -->
-    <xsl:template match="tei:bibl[parent::tei:listBibl]">
-        <!-- anchor oziroma atribut id obvezen, da se lahko na njih sklicuje iz literature v opombah.
+    <!-- za literaturo v seznamu literature: Ga več ne potrebujem, ker sem template za biblList spet prevzel iz izhodiščnih TEI Stylesheets -->
+    <!--<xsl:template match="tei:bibl[parent::tei:listBibl]">
+        <!-\- anchor oziroma atribut id obvezen, da se lahko na njih sklicuje iz literature v opombah.
              Sklicujemo pa se lahko samo v primeru, če že prej obstaja povezava,
-             zato imajo listBibl/bibl v teh primerih vedno xml:id -->
-        <!-- Vsaka bibliografska enota obvezno dobi anchor, da se lahko na
-             njega sklicujemo iz literature v opombah. -->
-        <!-- Ker ne vemo vnaprej, ali je knjiga ali članek ali kaj drugega, je lahko samo CreativeWork -->
+             zato imajo listBibl/bibl v teh primerih vedno xml:id -\->
+        <!-\- Vsaka bibliografska enota obvezno dobi anchor, da se lahko na
+             njega sklicujemo iz literature v opombah. -\->
+        <!-\- Ker ne vemo vnaprej, ali je knjiga ali članek ali kaj drugega, je lahko samo CreativeWork -\->
         <li id="{@xml:id}" itemscope="" itemtype="https://schema.org/CreativeWork">
             <xsl:apply-templates/>
         </li>
-    </xsl:template>
+    </xsl:template>-->
     
     <!-- za literaturo, ki ima povezavo -->
     <xsl:template match="tei:bibl[@corresp][not(@type='arhiv')]">
