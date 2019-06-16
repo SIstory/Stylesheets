@@ -98,11 +98,12 @@
                 <ul class="listBibl">
                     <xsl:for-each select="*[not(self::tei:head)]">
                         <li>
-                            <xsl:call-template name="makeAnchor">
+                            <!-- moram odstraniti, ker pri nadaljnem procesiranju naredi še en id atibut -->
+                            <!--<xsl:call-template name="makeAnchor">
                                 <xsl:with-param name="name">
                                     <xsl:apply-templates mode="ident" select="."/>
                                 </xsl:with-param>
-                            </xsl:call-template>
+                            </xsl:call-template>-->
                             <xsl:apply-templates select="."/>
                         </li>
                     </xsl:for-each>
