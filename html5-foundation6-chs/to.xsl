@@ -365,7 +365,8 @@
                      </xsl:if>
                      <!-- še enkrat generiram povsem isti naslov kot pri index.html -->
                      <xsl:apply-templates select="//tei:text/tei:front/tei:titlePage"/>
-                     <xsl:call-template name="printNotes"/>
+                     <!-- bug?: če so v front/div opombe note, poteh jih naredi v teh index-xml:lang.html datotekah. Zato sem sedaj spodnji template odstranil -->
+                     <!--<xsl:call-template name="printNotes"/>-->
                      <xsl:call-template name="htmlFileBottom"/>
                      <xsl:call-template name="bodyEndHook"/>
                   </div>
