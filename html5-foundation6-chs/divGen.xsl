@@ -70,9 +70,11 @@
         <xsl:apply-templates select="tei:respStmt" mode="kolofon"/>
         <br/>
         <xsl:if test="tei:funder">
-            <p itemprop="funder">
-                <xsl:value-of select="tei:funder"/>
-            </p>
+            <xsl:for-each select="tei:funder">
+                <p itemprop="funder">
+                    <xsl:value-of select="."/>
+                </p>
+            </xsl:for-each>
         </xsl:if>
         <br/>
     </xsl:template>
@@ -838,7 +840,7 @@
     <xsl:template name="search">
         <xsl:variable name="tei-id" select="ancestor::tei:TEI/@xml:id"/>
         <xsl:variable name="sistoryAbsolutePath">
-            <xsl:if test="$chapterAsSIstoryPublications='true'">http://www.sistory.si</xsl:if>
+            <xsl:if test="$chapterAsSIstoryPublications='true'">https://www.sistory.si</xsl:if>
         </xsl:variable>
         <div id="tipue_search_content">
             <xsl:text> </xsl:text>

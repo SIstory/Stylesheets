@@ -45,10 +45,12 @@
                             <xsl:attribute name="itemtype">http://schema.org/Book</xsl:attribute>
                         </xsl:if>
                         <!-- vstavim svoj header -->
-                        <xsl:call-template name="html-header">
-                            <xsl:with-param name="thisChapter-id" select="@xml:id"/>
-                            <xsl:with-param name="thisLanguage" select="@xml:lang"/>
-                        </xsl:call-template>
+                        <xsl:if test="$topNavigation = 'true'">
+                            <xsl:call-template name="html-header">
+                                <xsl:with-param name="thisChapter-id" select="@xml:id"/>
+                                <xsl:with-param name="thisLanguage" select="@xml:lang"/>
+                            </xsl:call-template>
+                        </xsl:if>
                         <!-- GLAVNA VSEBINA -->
                         <section>
                             <div class="row">

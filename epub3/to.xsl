@@ -11,7 +11,7 @@
   version="2.0" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     
-  <xsl:import href="../../Stylesheets-master/epub3/tei-to-epub3.xsl"/>
+  <xsl:import href="../../tei-xsl-7.47.0/xml/tei/stylesheet/epub3/tei-to-epub3.xsl"/>
   
   <!-- uvozim nekatere svoje html pretvorbe, ki povozijo pretvorbe TEI konzircija -->
   <xsl:import href="../html5-foundation6-chs/myi18n.xsl"/>

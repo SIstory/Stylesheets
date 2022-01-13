@@ -16,6 +16,8 @@
     
     <!-- če želiš imeti zgornjo header navgacijo -->
     <xsl:param name="topNavigation">true</xsl:param>
+    <!-- če želiš imeti stransko navigacijo za premikanje med sklopi vsebine (gumb naprej in nazaj) -->
+    <xsl:param name="sideNavigation">true</xsl:param>
     
     <!-- If you want to have sticky title nav bar: true  -->
     <xsl:param name="title-bar-sticky">true</xsl:param>

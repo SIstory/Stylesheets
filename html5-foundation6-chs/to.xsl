@@ -423,9 +423,11 @@
                <section>
                   <div class="row">
                      <div class="medium-2 columns show-for-medium">
-                        <p>
-                           <xsl:call-template name="previousLink"/>
-                        </p>
+                        <xsl:if test="$sideNavigation = 'true'">
+                           <p>
+                              <xsl:call-template name="previousLink"/>
+                           </p>
+                        </xsl:if>
                      </div>
                      <div class="medium-8 small-12 columns">
                         <xsl:call-template name="stdheader">
@@ -435,27 +437,33 @@
                         </xsl:call-template>
                      </div>
                      <div class="medium-2 columns show-for-medium text-right">
-                        <p>
-                           <xsl:if test="parent::tei:div">
-                              <xsl:call-template name="parentChapter"/>
-                           </xsl:if>
-                           <xsl:call-template name="nextLink"/>
-                        </p>
+                        <xsl:if test="$sideNavigation = 'true'">
+                           <p>
+                              <xsl:if test="parent::tei:div">
+                                 <xsl:call-template name="parentChapter"/>
+                              </xsl:if>
+                              <xsl:call-template name="nextLink"/>
+                           </p>
+                        </xsl:if>
                      </div>
                   </div>
                   <div class="row hide-for-medium">
                      <div class="small-6 columns text-center">
-                        <p>
-                           <xsl:call-template name="previousLink"/>
-                        </p>
+                        <xsl:if test="$sideNavigation = 'true'">
+                           <p>
+                              <xsl:call-template name="previousLink"/>
+                           </p>
+                        </xsl:if>
                      </div>
                      <div class="small-6 columns text-center">
-                        <p>
-                           <xsl:if test="parent::tei:div">
-                              <xsl:call-template name="parentChapter"/>
-                           </xsl:if>
-                           <xsl:call-template name="nextLink"/>
-                        </p>
+                        <xsl:if test="$sideNavigation = 'true'">
+                           <p>
+                              <xsl:if test="parent::tei:div">
+                                 <xsl:call-template name="parentChapter"/>
+                              </xsl:if>
+                              <xsl:call-template name="nextLink"/>
+                           </p>
+                        </xsl:if>
                      </div>
                   </div>
                   <!--<xsl:if test="$topNavigationPanel = 'true'">
@@ -486,6 +494,23 @@
                   <!-- .//tei:note -->
                   <xsl:if test="string-length($exist-note) gt 0">
                      <div class="row">
+                        <xsl:if test="$sideNavigation = 'true'">
+                           <div class="small-6 columns text-center">
+                              <p>
+                                 <xsl:call-template name="previousLink"/>
+                              </p>
+                           </div>
+                           <div class="small-6 columns text-center">
+                              <p>
+                                 <xsl:call-template name="nextLink"/>
+                              </p>
+                           </div>
+                        </xsl:if>
+                     </div>
+                  </xsl:if>
+                  <xsl:call-template name="printNotes"/>
+                  <div class="row">
+                     <xsl:if test="$sideNavigation = 'true'">
                         <div class="small-6 columns text-center">
                            <p>
                               <xsl:call-template name="previousLink"/>
@@ -496,20 +521,7 @@
                               <xsl:call-template name="nextLink"/>
                            </p>
                         </div>
-                     </div>
-                  </xsl:if>
-                  <xsl:call-template name="printNotes"/>
-                  <div class="row">
-                     <div class="small-6 columns text-center">
-                        <p>
-                           <xsl:call-template name="previousLink"/>
-                        </p>
-                     </div>
-                     <div class="small-6 columns text-center">
-                        <p>
-                           <xsl:call-template name="nextLink"/>
-                        </p>
-                     </div>
+                     </xsl:if>
                   </div>
                   <!--<xsl:if test="$bottomNavigationPanel = 'true'">
                          <xsl:element name="{if ($outputTarget='html5') then 'nav' else 'div'}">
